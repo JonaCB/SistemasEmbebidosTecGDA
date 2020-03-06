@@ -4,21 +4,23 @@
 #include <libopencm3/stm32/timer.h>
 #include <libopencm3/cm3/nvic.h>
 
-uint32_t core_clock_hz;
-
-
 #define F_CLK 64000000
-#define PRESCALER_TIM2 64 //TIM2 frequency = 64Mhz /64 = 1Mhz
-#define PWM_FREQUENCY 10000 //PWM Frequency = 10kHz
-#define PWM_PERIOD F_CLK/PRESCALER_TIM2/PWM_FREQUENCY
+#define PRESCALER_TIM2 2 //TIM2 frequency = 64Mhz /2 = 32Mhz
+#define PWM_FREQUENCY 100000 //PWM Frequency = 100kHz
+#define PWM_PERIOD F_CLK/PRESCALER_TIM2/PWM_FREQUENCY //320 counts
+#define PRESCALER_TIM3 64 //TIM3 frequency = 65Mhz/64 = 1Mhz
+#define F_TIM3 F_CLK/PRESCALER_TIM3 
+
 #define F0 1 //initial frequency of 1Hz
-#define PRESCALER_TIM3 6400 //TIM3 frequency = 65Mhz/64k = 10khz
+//we multiply this frequency over 255
 
 static void TIM2_setup(void);
 static void TIM3_setup(void);
 static void gpio_setup(void);
 static void system_clock_setup(void);
 int pwm_percentage(int percentage);
+
+int fx = 0;
 
 //sine function generated in python
 /*
@@ -83,7 +85,6 @@ static void gpio_setup(void) {
 static void system_clock_setup(void) {
 	
 	rcc_clock_setup_in_hsi_out_64mhz();
-  	core_clock_hz = 64000000;
 
 }
 
@@ -123,7 +124,8 @@ static void TIM3_setup(void) {
 	timer_reset(TIM3);
 	rcc_periph_clock_enable(RCC_TIM3);
 	timer_set_prescaler(TIM3, PRESCALER_TIM3); //this doesn't worg for frequency > 65Mhz
-	timer_set_period(TIM3, 39); // period in ms
+	fx = F0*255;
+	timer_set_period(TIM3, F_TIM3/fx); // period in ms
 
 	timer_enable_irq(TIM3,TIM_DIER_UIE); //update event interrupt
 	nvic_clear_pending_irq(NVIC_TIM3_IRQ); //interrupt number for TIM3 (pag. 202)

@@ -10,9 +10,10 @@ In order to vary the intensity it is necessary to generate a PWM signal, in whic
 
 There are 2 mini milestones: 
 
-Generate the sine wave of any frequency (visible obviously), varying the intensity of the LED using PWM
-Connect a LED to a Timer output, and toggle the LED with the following progression: On 1 sec, Off 1/1.1 secs, On 1/1.2 secs, Off 1/1.3 secs, .... until On 1/10 secs, then revert progression as: On 1/10 secs, Off 1/9.9 secs, On 1/9.8 secs, .... until On 1sec
+1. Generate the sine wave of any frequency (visible obviously), varying the intensity of the LED using PWM
+2. Connect a LED to a Timer output, and toggle the LED with the following progression: On 1 sec, Off 1/1.1 secs, On 1/1.2 secs, Off 1/1.3 secs, .... until On 1/10 secs, then revert progression as: On 1/10 secs, Off 1/9.9 secs, On 1/9.8 secs, .... until On 1sec
+
 Deliverables are:
 
-A video showing the code being compiled and downloaded to the STM32 board through the ST-Link programmer, and the light oscillating starting in 1Hz, going to 10Hz and coming back to 1Hz. The video shall be uploaded to youtube
-The source code and the Makefile to compile the two mini milestones and the final deliverable
+- A video showing the code being compiled and downloaded to the STM32 board through the ST-Link programmer, and the light oscillating starting in 1Hz, going to 10Hz and coming back to 1Hz. The video shall be uploaded to youtube
+- The source code and the Makefile to compile the two mini milestones and the final deliverable
