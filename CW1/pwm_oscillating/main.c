@@ -1,4 +1,3 @@
-
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/timer.h>
@@ -14,13 +13,21 @@
 #define F0 1 //initial frequency of 1Hz
 //we multiply this frequency over 255
 
+#define F_MIN F0
+#define F_MAX 10*F0
+
+
+
 static void TIM2_setup(void);
 static void TIM3_setup(void);
 static void gpio_setup(void);
 static void system_clock_setup(void);
 uint16_t get_pwm_percentage_counts(uint16_t percentage);
+uint16_t get_divided_frequency_counts(uint16_t frequency);
 
-uint16_t fx = 0;
+
+float f = F_MIN; //initial frequency of 1Hz
+uint8_t UP_DOWN = 1; //initial frequency of 1Hz
 
 //sine function generated in python
 /*
@@ -31,7 +38,7 @@ amplitude   = np.sin(2*np.pi*f*time)
 x = (amplitude +1) / 2 * 100
 print(x.astype(int))
 */
-static const uint16_t sine_function[255] = { 50, 51, 52, 53, 54, 56, 57, 58, 59, 60, 62, 63, 64, 65, 66, 68, 69,
+static const uint8_t sine_function[255] = { 50, 51, 52, 53, 54, 56, 57, 58, 59, 60, 62, 63, 64, 65, 66, 68, 69,
 										70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86,
 										87, 87, 88, 89, 90, 90, 91, 92, 92, 93, 94, 94, 95, 95, 96, 96, 97,
 										97, 97, 98, 98, 98, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
@@ -124,8 +131,12 @@ static void TIM3_setup(void) {
 	timer_reset(TIM3);
 	rcc_periph_clock_enable(RCC_TIM3);
 	timer_set_prescaler(TIM3, PRESCALER_TIM3); //this doesn't worg for frequency > 65Mhz
-	fx = F0*255;
-	timer_set_period(TIM3, F_TIM3/fx); // period in ms
+	timer_set_period(TIM3, get_divided_frequency_counts((uint16_t)f)); // period in ms
+	
+	// timer_enable_preload(TIM3);
+	// timer_update_on_overflow(TIM3);
+	// timer_enable_update_event(TIM3);
+	//timer_disable_preload(TIM3);
 
 	timer_enable_irq(TIM3,TIM_DIER_UIE); //update event interrupt
 	nvic_clear_pending_irq(NVIC_TIM3_IRQ); //interrupt number for TIM3 (pag. 202)
@@ -135,12 +146,34 @@ static void TIM3_setup(void) {
 	
 }
 
+uint16_t get_divided_frequency_counts(uint16_t frequency){
+	return F_TIM3/(frequency*255);
+}
+
 void tim3_isr (void){
-	timer_clear_flag(TIM3, TIM_SR_UIF);
+
 	counter = (counter+1) % 255;
 	if(counter == 0){
+		if(UP_DOWN){
+			f += 0.1f*f;
+			if (f>F_MAX){
+				f = F_MAX;
+				UP_DOWN = 0;
+			}
+		}
+		else{
+			f -= 0.1f*f;
+			if (f<F_MIN){
+				f = F_MIN;
+				UP_DOWN = 1;
+			}
+		}
+		timer_set_period(TIM3, get_divided_frequency_counts((uint16_t)f)); // period in ms
+		//timer_generate_event(TIM3, TIM_EGR_UG );
 		gpio_toggle(GPIOC,GPIO13);	/* LED toogle */
 	}
+	timer_clear_flag(TIM3, TIM_SR_UIF);
 	timer_set_oc_value(TIM2,TIM_OC2,get_pwm_percentage_counts(sine_function[counter]));
 }
+
 
