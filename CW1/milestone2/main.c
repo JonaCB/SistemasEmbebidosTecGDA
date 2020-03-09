@@ -61,8 +61,8 @@ static void TIM3_setup(void) {
 
 	timer_reset(TIM3);
 	rcc_periph_clock_enable(RCC_TIM3);
-	timer_set_prescaler(TIM3, PRESCALER_TIM3); //this doesn't worg for frequency > 65Mhz
-	timer_set_period(TIM3, get_divided_frequency_counts((uint16_t)f)); // period in ms
+	timer_set_prescaler(TIM3, PRESCALER_TIM3 - 1); //this doesn't worg for frequency > 65Mhz
+	timer_set_period(TIM3, get_divided_frequency_counts((uint16_t)f) - 1); // period in ms
 	
 	// timer_enable_preload(TIM3);
 	// timer_update_on_overflow(TIM3);
@@ -102,7 +102,7 @@ void tim3_isr (void){
 			break;
 	}
 
-	timer_set_period(TIM3, get_divided_frequency_counts((uint16_t)f)); // period in ms
+	timer_set_period(TIM3, get_divided_frequency_counts((uint16_t)f) - 1); // period in ms
 	gpio_toggle(GPIOC,GPIO13);	/* LED toogle */
 
 
