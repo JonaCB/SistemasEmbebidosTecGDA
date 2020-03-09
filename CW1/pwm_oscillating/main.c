@@ -16,8 +16,6 @@
 #define F_MIN F0
 #define F_MAX 10*F0
 
-
-
 static void TIM2_setup(void);
 static void TIM3_setup(void);
 static void gpio_setup(void);
@@ -75,12 +73,12 @@ int main(void) {
 
 static void gpio_setup(void) {
 
-	/* Enable GPIOC clock. */
-	rcc_periph_clock_enable(RCC_GPIOC);
+	// /* Enable GPIOC clock. */
+	// rcc_periph_clock_enable(RCC_GPIOC);
 
-	/* Set GPIO8 (in GPIO port C) to 'output push-pull'. */
-	gpio_set_mode(GPIOC,GPIO_MODE_OUTPUT_2_MHZ,
-		      GPIO_CNF_OUTPUT_PUSHPULL,GPIO13);
+	// /* Set GPIO8 (in GPIO port C) to 'output push-pull'. */
+	// gpio_set_mode(GPIOC,GPIO_MODE_OUTPUT_2_MHZ,
+	// 	      GPIO_CNF_OUTPUT_PUSHPULL,GPIO13);
 
 	rcc_periph_clock_enable(RCC_AFIO);		// Need AFIO clock
 
@@ -139,8 +137,8 @@ static void TIM3_setup(void) {
 
 	timer_reset(TIM3);
 	rcc_periph_clock_enable(RCC_TIM3);
-	timer_set_prescaler(TIM3, PRESCALER_TIM3); //this doesn't worg for frequency > 65Mhz
-	timer_set_period(TIM3, get_divided_frequency_counts((uint16_t)f)); // period in ms
+	timer_set_prescaler(TIM3, PRESCALER_TIM3 - 1); //this doesn't worg for frequency > 65Mhz
+	timer_set_period(TIM3, get_divided_frequency_counts((uint16_t)f) - 1); // period in ms
 	
 	// timer_enable_preload(TIM3);
 	// timer_update_on_overflow(TIM3);
@@ -180,9 +178,9 @@ void tim3_isr (void){
 				break;
 		}
 
-		timer_set_period(TIM3, get_divided_frequency_counts((uint16_t)f)); // period in ms
+		timer_set_period(TIM3, get_divided_frequency_counts((uint16_t)f) - 1); // period in ms
 		//timer_generate_event(TIM3, TIM_EGR_UG );
-		gpio_toggle(GPIOC,GPIO13);	/* LED toogle */
+		//gpio_toggle(GPIOC,GPIO13);	/* LED toogle */
 	}
 	timer_clear_flag(TIM3, TIM_SR_UIF);
 	timer_set_oc_value(TIM2,TIM_OC2,get_pwm_percentage_counts(sine_function[counter]) - 1);
