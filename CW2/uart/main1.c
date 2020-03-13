@@ -14,17 +14,10 @@ static void system_clock_setup(void);
 static void TIM3_setup(void);
 static void usart_setup(void);
 static inline void uart_putc( char ch);
-static void uart_send_msg( char *msg);
+static void uart_send_word( char *word);
 
-typedef enum {
-  IDLE,
-  SENDING_MSG,
-  SENDING_CHAR,
-} TxSMType; 
 
-TxSMType tx_state = IDLE;
-
-char * msg_addr;
+uint8_t c = '0' - 1;
 
 int main(void) {
 
@@ -32,6 +25,7 @@ int main(void) {
 	gpio_setup();
 	usart_setup();
 	TIM3_setup();
+
 
 	for (;;) {
 
@@ -57,26 +51,19 @@ static void usart_setup(void){
 	usart_set_mode(USART1,USART_MODE_TX);
 	usart_set_parity(USART1,USART_PARITY_NONE);
 	usart_set_flow_control(USART1,USART_FLOWCONTROL_NONE);
-
-	nvic_clear_pending_irq(NVIC_USART1_IRQ); 
-	nvic_enable_irq(NVIC_USART1_IRQ);
-
 	usart_enable(USART1);
-	usart_wait_send_ready (USART1);
 }
 
 static inline void uart_putc( char ch) {
-	tx_state = SENDING_CHAR;
-	usart_enable_tx_interrupt(USART1);
-	usart_send(USART1, ch);
-	//usart_send_blocking(USART1,ch);
+	usart_send_blocking(USART1,ch);
 }
 
-static void uart_send_msg( char *msg){
-	msg_addr = msg;
-	tx_state = SENDING_MSG;
-	usart_enable_tx_interrupt(USART1);
-	usart_send(USART1, (*msg_addr));
+static void uart_send_word( char *word){
+	uint8_t i = 0;
+	do{
+		uart_putc(word[i++]); 
+		//i++;
+	}while(word[i] != 0);
 	
 }
 
@@ -88,7 +75,6 @@ static void gpio_setup(void) {
 	/* Set GPIO8 (in GPIO port C) to 'output push-pull'. */
 	gpio_set_mode(GPIOC,GPIO_MODE_OUTPUT_2_MHZ,
 		      GPIO_CNF_OUTPUT_PUSHPULL,GPIO13);
-	gpio_set(GPIOC,GPIO13); //start with led off
 }
 
 
@@ -122,38 +108,18 @@ void tim3_isr(void) {
 
 	timer_clear_flag(TIM3, TIM_SR_UIF);
 
-	uart_send_msg("Hello world\n\r");
-
-	//uart_putc('X');
-
 	gpio_toggle(GPIOC,GPIO13);	/* LED on */
 
+	// if ( ++c >= 'Z' ) {
+	// 	uart_putc(c);
+	// 	uart_putc('\r');
+	// 	uart_putc('\n');
+	// 	c = '0' - 1;
+	// } else	{
+	// 	uart_putc(c);
+	// }
 
-}
+	uart_send_word("Hola\r\n");
 
-void usart1_isr (void){
-	
-	if (usart_get_flag (USART1, USART_SR_TXE  )){
-		usart_disable_tx_interrupt(USART1);
-
-		switch(tx_state){
-			case SENDING_CHAR:
-				tx_state = IDLE;
-				break;
-			case SENDING_MSG:
-				if(*(++msg_addr) != 0){
-					usart_enable_tx_interrupt(USART1);
-					usart_send(USART1, (*msg_addr));
-				}else{
-					tx_state = IDLE;
-				}
-				break;
-			default:
-				tx_state = IDLE;
-				break;
-		}
-
-		
-	}
 
 }
