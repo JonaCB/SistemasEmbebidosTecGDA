@@ -7,16 +7,14 @@
 #define PRESCALER_TIM2 2 //TIM2 frequency = 64Mhz /2 = 32Mhz
 #define PWM_FREQUENCY 100000 //PWM Frequency = 100kHz
 #define PWM_PERIOD F_CLK/PRESCALER_TIM2/PWM_FREQUENCY //320 counts
-#define PRESCALER_TIM3 64 //TIM3 frequency = 65Mhz/64 = 1Mhz
+#define PRESCALER_TIM3 64 //TIM3 frequency = 64Mhz/64 = 1Mhz
 #define F_TIM3 F_CLK/PRESCALER_TIM3 
 
 #define F0 1 //initial frequency of 1Hz
-//we multiply this frequency over 255
+//we multiply this frequency by 255
 
 #define F_MIN F0
 #define F_MAX 10*F0
-
-
 
 static void TIM2_setup(void);
 static void TIM3_setup(void);
@@ -25,9 +23,14 @@ static void system_clock_setup(void);
 uint16_t get_pwm_percentage_counts(uint16_t percentage);
 uint16_t get_divided_frequency_counts(uint16_t frequency);
 
+typedef enum  {
+  UP,
+  DOWN
+} directionType; 
 
 float f = F_MIN; //initial frequency of 1Hz
-uint8_t UP_DOWN = 1; //initial frequency of 1Hz
+directionType direction = UP; //initial frequency of 1Hz
+
 
 //sine function generated in python
 /*
@@ -70,12 +73,12 @@ int main(void) {
 
 static void gpio_setup(void) {
 
-	/* Enable GPIOC clock. */
-	rcc_periph_clock_enable(RCC_GPIOC);
+	// /* Enable GPIOC clock. */
+	// rcc_periph_clock_enable(RCC_GPIOC);
 
-	/* Set GPIO8 (in GPIO port C) to 'output push-pull'. */
-	gpio_set_mode(GPIOC,GPIO_MODE_OUTPUT_2_MHZ,
-		      GPIO_CNF_OUTPUT_PUSHPULL,GPIO13);
+	// /* Set GPIO8 (in GPIO port C) to 'output push-pull'. */
+	// gpio_set_mode(GPIOC,GPIO_MODE_OUTPUT_2_MHZ,
+	// 	      GPIO_CNF_OUTPUT_PUSHPULL,GPIO13);
 
 	rcc_periph_clock_enable(RCC_AFIO);		// Need AFIO clock
 
@@ -117,21 +120,25 @@ static void TIM2_setup(void) {
 	timer_set_oc_mode(TIM2,TIM_OC2,TIM_OCM_PWM2); //PWM2 because we are using CH2
 	timer_enable_oc_output(TIM2,TIM_OC2); //Enabling CH2 as output
 
-	timer_set_oc_value(TIM2,TIM_OC2,get_pwm_percentage_counts(sine_function[counter = 0])); //Setting initial value tu 50%
+	timer_set_oc_value(TIM2,TIM_OC2,get_pwm_percentage_counts(sine_function[counter = 0]) - 1); //Setting initial value tu 50%
 	timer_enable_counter(TIM2);
 
 }
 
 uint16_t get_pwm_percentage_counts(uint16_t percentage){
-	return (percentage*PWM_PERIOD) / 100;
+	uint16_t counts = (percentage*PWM_PERIOD) / 100;
+	if (counts == 0){
+		counts++; //this prevents the counter to have a negative value when we substract 1
+	}
+	return counts;
 }
 
 static void TIM3_setup(void) {
 
 	timer_reset(TIM3);
 	rcc_periph_clock_enable(RCC_TIM3);
-	timer_set_prescaler(TIM3, PRESCALER_TIM3); //this doesn't worg for frequency > 65Mhz
-	timer_set_period(TIM3, get_divided_frequency_counts((uint16_t)f)); // period in ms
+	timer_set_prescaler(TIM3, PRESCALER_TIM3 - 1); //this doesn't worg for frequency > 65Mhz
+	timer_set_period(TIM3, get_divided_frequency_counts((uint16_t)f) - 1); // period in ms
 	
 	// timer_enable_preload(TIM3);
 	// timer_update_on_overflow(TIM3);
@@ -154,26 +161,29 @@ void tim3_isr (void){
 
 	counter = (counter+1) % 255;
 	if(counter == 0){
-		if(UP_DOWN){
-			f += 0.1f*f;
-			if (f>F_MAX){
-				f = F_MAX;
-				UP_DOWN = 0;
-			}
+		switch(direction){
+			case UP:
+				f += 0.1f*f;
+				if (f>F_MAX){
+					f = F_MAX;
+					direction = DOWN;
+				}
+				break;
+			case DOWN:
+				f -= 0.1f*f;
+				if (f<F_MIN){
+					f = F_MIN;
+					direction = UP;
+				}
+				break;
 		}
-		else{
-			f -= 0.1f*f;
-			if (f<F_MIN){
-				f = F_MIN;
-				UP_DOWN = 1;
-			}
-		}
-		timer_set_period(TIM3, get_divided_frequency_counts((uint16_t)f)); // period in ms
+
+		timer_set_period(TIM3, get_divided_frequency_counts((uint16_t)f) - 1); // period in ms
 		//timer_generate_event(TIM3, TIM_EGR_UG );
-		gpio_toggle(GPIOC,GPIO13);	/* LED toogle */
+		//gpio_toggle(GPIOC,GPIO13);	/* LED toogle */
 	}
 	timer_clear_flag(TIM3, TIM_SR_UIF);
-	timer_set_oc_value(TIM2,TIM_OC2,get_pwm_percentage_counts(sine_function[counter]));
+	timer_set_oc_value(TIM2,TIM_OC2,get_pwm_percentage_counts(sine_function[counter]) - 1);
 }
 
 
