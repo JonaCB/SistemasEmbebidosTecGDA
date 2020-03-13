@@ -3,37 +3,31 @@
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/timer.h>
 #include <libopencm3/stm32/usart.h>
+#include <libopencm3/cm3/nvic.h>
 
-uint32_t core_clock_hz;
+#define F_CLK 24000000
+#define PRESCALER_TIM3 F_CLK / 1000 //TIM3 frequency = 24Mhz/24K = 1khz
+#define PERIOD_TIM3 100 //100ms
 
-static void timer_setup(void);
 static void gpio_setup(void);
 static void system_clock_setup(void);
-static void delay_ms(uint32_t ms);
+static void TIM3_setup(void);
 static void usart_setup(void);
-static inline void uart_putc(char ch);
+static inline void uart_putc( char ch);
+static void uart_send_word( char *word);
+
+
+uint8_t c = '0' - 1;
 
 int main(void) {
 
 	system_clock_setup();
 	gpio_setup();
 	usart_setup();
-	timer_setup();
+	TIM3_setup();
 
-	uint8_t c = '0' - 1;
 
 	for (;;) {
-		gpio_toggle(GPIOC,GPIO13);	/* LED on */
-		delay_ms(100);
-
-		if ( ++c >= 'Z' ) {
-			uart_putc(c);
-			uart_putc('\r');
-			uart_putc('\n');
-			c = '0' - 1;
-		} else	{
-			uart_putc(c);
-		}
 
 	}
 
@@ -60,8 +54,17 @@ static void usart_setup(void){
 	usart_enable(USART1);
 }
 
-static inline void uart_putc(char ch) {
+static inline void uart_putc( char ch) {
 	usart_send_blocking(USART1,ch);
+}
+
+static void uart_send_word( char *word){
+	uint8_t i = 0;
+	do{
+		uart_putc(word[i++]); 
+		//i++;
+	}while(word[i] != 0);
+	
 }
 
 static void gpio_setup(void) {
@@ -78,22 +81,45 @@ static void gpio_setup(void) {
 static void system_clock_setup(void) {
 	
 	rcc_clock_setup_in_hsi_out_24mhz();
-  	core_clock_hz = 24000000;
 
 }
 
-static void timer_setup(void) {
+static void TIM3_setup(void) {
 
-	timer_reset(TIM2);
-	rcc_periph_clock_enable(RCC_TIM2);
-	timer_set_prescaler(TIM2, core_clock_hz / 1000);
+	timer_reset(TIM3);
+	rcc_periph_clock_enable(RCC_TIM3);
+	timer_set_prescaler(TIM3, PRESCALER_TIM3 - 1); //this doesn't worg for frequency > 65Mhz
+	timer_set_period(TIM3, PERIOD_TIM3 - 1); // period in ms
+	
+	// timer_enable_preload(TIM3);
+	// timer_update_on_overflow(TIM3);
+	// timer_enable_update_event(TIM3);
+	//timer_disable_preload(TIM3);
+
+	timer_enable_irq(TIM3,TIM_DIER_UIE); //update event interrupt
+	nvic_clear_pending_irq(NVIC_TIM3_IRQ); //interrupt number for TIM3 (pag. 202)
+	nvic_enable_irq(NVIC_TIM3_IRQ); //interrupt number for TIM3 (pag. 202)
+	
+	timer_enable_counter(TIM3);
+	
 }
 
-static void delay_ms(uint32_t ms){
+void tim3_isr(void) {
 
-	timer_set_period(TIM2, ms);
-	timer_enable_counter(TIM2);
-	while (!timer_get_flag(TIM2, TIM_SR_UIF)) {}; //wait for the counter
-	timer_clear_flag(TIM2, TIM_SR_UIF);
-	timer_disable_counter(TIM2);
+	timer_clear_flag(TIM3, TIM_SR_UIF);
+
+	gpio_toggle(GPIOC,GPIO13);	/* LED on */
+
+	// if ( ++c >= 'Z' ) {
+	// 	uart_putc(c);
+	// 	uart_putc('\r');
+	// 	uart_putc('\n');
+	// 	c = '0' - 1;
+	// } else	{
+	// 	uart_putc(c);
+	// }
+
+	uart_send_word("Hola\n\r");
+
+
 }
