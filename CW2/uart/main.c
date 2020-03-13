@@ -50,17 +50,21 @@ static void usart_setup(void){
 		GPIO_MODE_OUTPUT_50_MHZ,
 		GPIO_CNF_OUTPUT_ALTFN_PUSHPULL,
 		GPIO_USART1_TX);
+	gpio_set_mode(GPIOA, GPIO_MODE_INPUT, 
+		GPIO_CNF_INPUT_FLOAT, 
+		GPIO_USART1_RX);
 
 	usart_set_baudrate(USART1,38400);
 	usart_set_databits(USART1,8);
 	usart_set_stopbits(USART1,USART_STOPBITS_1);
-	usart_set_mode(USART1,USART_MODE_TX);
+	usart_set_mode(USART1,USART_MODE_TX_RX);
 	usart_set_parity(USART1,USART_PARITY_NONE);
 	usart_set_flow_control(USART1,USART_FLOWCONTROL_NONE);
 
+
+	usart_enable_rx_interrupt (USART1);
 	nvic_clear_pending_irq(NVIC_USART1_IRQ); 
 	nvic_enable_irq(NVIC_USART1_IRQ);
-
 	usart_enable(USART1);
 	usart_wait_send_ready (USART1);
 }
@@ -122,18 +126,20 @@ void tim3_isr(void) {
 
 	timer_clear_flag(TIM3, TIM_SR_UIF);
 
-	uart_send_msg("Hello world\n\r");
-
-	//uart_putc('X');
+	//uart_send_msg("Starting\n\r");
 
 	gpio_toggle(GPIOC,GPIO13);	/* LED on */
-
 
 }
 
 void usart1_isr (void){
-	
-	if (usart_get_flag (USART1, USART_SR_TXE  )){
+
+	if (usart_get_flag (USART1, USART_SR_RXNE )){ // Recieve flag
+		char chr = usart_recv(USART1);
+		usart_enable_tx_interrupt(USART1);
+		usart_send(USART1, chr);
+	}
+	else if (usart_get_flag (USART1, USART_SR_TXE )){ // Transmit flag
 		usart_disable_tx_interrupt(USART1);
 
 		switch(tx_state){
@@ -151,9 +157,8 @@ void usart1_isr (void){
 			default:
 				tx_state = IDLE;
 				break;
-		}
-
-		
+		}	
 	}
+	
 
 }
