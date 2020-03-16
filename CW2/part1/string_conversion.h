@@ -5,6 +5,7 @@
 
 char* itoa(int value, char* buffer, int base);
 void ftoa(float Value, char* Buffer);
+long atoi(const char* S);
 
 // inline function to swap two numbers
 static inline void swap(char *x, char *y) {
@@ -190,3 +191,21 @@ void ftoa(float Value, char* Buffer)
      //make sure the output is terminated
      Buffer[count] = '\0';
  }
+
+
+ long atoi(const char* S)
+{
+	long num = 0;
+
+	int i = 0;
+	
+	// run till we have reached end of the string or
+	// current character is non-numeric
+	while (S[i] && (S[i] >= '0' && S[i] <= '9'))
+	{
+		num = num * 10 + (S[i] - '0');
+		i++;
+	}
+
+	return num;
+}
