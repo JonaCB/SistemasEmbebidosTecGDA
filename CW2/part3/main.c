@@ -6,6 +6,7 @@
 #include <libopencm3/cm3/nvic.h>
 #include <libopencm3/stm32/adc.h>
 #include "miniprintf.h"
+#include "string_conversion.h"
 
 
 #define F_CLK 24000000
@@ -14,6 +15,7 @@
 
 #define MAX_TEMP_CMD 'x'
 #define MIN_TEMP_CMD 'n'
+#define VALUE_STR_LENGTH 11
 
 static void gpio_setup(void);
 static void system_clock_setup(void);
@@ -32,21 +34,39 @@ typedef enum {
 
 typedef enum {
   WAIT_CONFIG_COMMAND,
-  WAIT_MAX_VALUE,
-  WAIT_MIN_VALUE
+  WAIT_VALUE
 } rx_SMType; 
 
-globalSMType global_state = SEND_INFO;
+typedef enum {
+  MAX_THR,
+  MIN_THR
+} thr_Type;
 
+thr_Type threshold;
+
+globalSMType global_state = SEND_INFO;
 rx_SMType rx_state = WAIT_CONFIG_COMMAND;
 
 char * error_msg = "\n\rError, invalid data was sent. Please send a valid temperature (integer numbers)\n\r\n\r";
+char * big_int_msg = "\n\rThis number is bigger than the expected values\n\r\n\r";
+
+typedef enum {
+  ON,
+  OFF,
+} led_statusType; 
+
+char * led_status[2] = {"On", "Off"};
+
+led_statusType min_led = OFF;
+led_statusType max_led = OFF;
 
 int MaxTempTh = 30;
 int MinTempTh = 29;
 
 int count = 0;
 int value_count = 0;
+
+char temp_value [VALUE_STR_LENGTH];
 
 
 int main(void) {
@@ -198,20 +218,25 @@ void tim3_isr(void) {
 
 	if (temp > MaxTempTh){
 		gpio_clear(GPIOA,GPIO1); //on
+		max_led = ON;
 	}else{
 		gpio_set(GPIOA,GPIO1); //off
+		max_led = OFF;
 	}
 	if (temp < MinTempTh){
 		gpio_clear(GPIOC,GPIO13); //on
+		min_led = ON;
 	}else{
 		gpio_set(GPIOC,GPIO13); //off
+		min_led = OFF;
 	}
 
 
 	switch(global_state){
 		case SEND_INFO:
 			if (count%5 == 0){
-				uart_printf("Temp: %dC, MaxTempTh: %dC, MinTempTh: %dC,\n\r", temp, MaxTempTh, MinTempTh);
+				uart_printf("Temp: %dC, MaxTempTh: %dC, MinTempTh: %dC, MaxTemp: %s, MinTemp: %s\n\r"
+							, temp, MaxTempTh, MinTempTh, led_status[max_led],led_status[min_led]);
 			}
 			break;
 		case SEND_MAX_TEMP_MSG:
@@ -244,19 +269,28 @@ void usart1_isr (void){
 				uart_printf("%c\n\r",chr);
 				if (chr == MAX_TEMP_CMD){
 					global_state = SEND_MAX_TEMP_MSG;
-					rx_state = WAIT_MAX_VALUE;
+					rx_state = WAIT_VALUE;
+					threshold = MAX_THR;
 				}
 				else if(chr == MIN_TEMP_CMD){
 					global_state = SEND_MIN_TEMP_MSG;
-					rx_state = WAIT_MIN_VALUE;
+					rx_state = WAIT_VALUE;
+					threshold = MIN_THR;
 				}
 				else{
 					uart_printf("\n\rCommand not valid. Type 'x' to configure max \n\rthreshold or 'n' to configure min threshold\n\r\n\r");
 				}
 				break;
-			case WAIT_MAX_VALUE:
+			case WAIT_VALUE:
 				if (chr == '.'){
 					if (value_count > 0){
+						temp_value[value_count] = 0;
+						int val = atoi(temp_value);
+						if (threshold == MAX_THR){
+							MaxTempTh = val;
+						} else{
+							 MinTempTh = val;
+						} 
 						value_count = 0;
 						uart_printf("%c\n\r",chr);
 						global_state = SEND_INFO;
@@ -264,41 +298,24 @@ void usart1_isr (void){
 					}else{
 						uart_printf("%c\n\r",chr);
 						uart_printf(error_msg);
-						global_state = SEND_MAX_TEMP_MSG;
+						global_state = (threshold == MAX_THR) ? SEND_MAX_TEMP_MSG: SEND_MIN_TEMP_MSG;
 					}
 				}else if ((chr >= '0') && (chr <= '9')){
-					uart_printf("%c",chr);
-					value_count++;
-				}
-				else{
-					value_count = 0;
-					uart_printf("%c\n\r",chr);
-					uart_printf(error_msg);
-					global_state = SEND_MAX_TEMP_MSG;
-				}
-				
-				break;
-			case WAIT_MIN_VALUE:
-				if (chr == '.'){
-					if (value_count > 0){
+					if (value_count > VALUE_STR_LENGTH - 2){
 						value_count = 0;
 						uart_printf("%c\n\r",chr);
-						global_state = SEND_INFO;
-						rx_state = WAIT_CONFIG_COMMAND;
+						uart_printf(big_int_msg);
+						global_state = (threshold == MAX_THR) ? SEND_MAX_TEMP_MSG: SEND_MIN_TEMP_MSG;
 					}else{
-						uart_printf("%c\n\r",chr);
-						uart_printf(error_msg);
-						global_state = SEND_MIN_TEMP_MSG;
+						uart_printf("%c",chr);
+						temp_value[value_count++] = chr;
 					}
-				}else if ((chr >= '0') && (chr <= '9')){
-					uart_printf("%c",chr);
-					value_count++;
 				}
 				else{
 					value_count = 0;
 					uart_printf("%c\n\r",chr);
 					uart_printf(error_msg);
-					global_state = SEND_MIN_TEMP_MSG;
+					global_state = (threshold == MAX_THR) ? SEND_MAX_TEMP_MSG: SEND_MIN_TEMP_MSG;;
 				}
 				break;
 			default:
