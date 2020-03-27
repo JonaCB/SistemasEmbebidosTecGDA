@@ -31,8 +31,8 @@ TxSMType tx_state = IDLE;
 
 char * msg_addr;
 
-int MaxTempTh = 30;
-int MinTempTh = 29;
+int MaxTempTh = 32;
+int MinTempTh = 30;
 
 int count = 0;
 
@@ -184,12 +184,12 @@ void tim3_isr(void) {
 	mV = read_adc(ADC_CHANNEL0) * 330 / 4095;
 	temp = mV;
 
-	if (temp > MaxTempTh){
+	if (temp >= MaxTempTh){
 		gpio_clear(GPIOA,GPIO1); //on
 	}else{
 		gpio_set(GPIOA,GPIO1); //off
 	}
-	if (temp < MinTempTh){
+	if (temp <= MinTempTh){
 		gpio_clear(GPIOC,GPIO13); //on
 	}else{
 		gpio_set(GPIOC,GPIO13); //off
