@@ -54,7 +54,7 @@ static void usart_setup(void){
 		GPIO_CNF_INPUT_FLOAT, 
 		GPIO_USART1_RX);
 
-	usart_set_baudrate(USART1,38400);
+	usart_set_baudrate(USART1,115200);
 	usart_set_databits(USART1,8);
 	usart_set_stopbits(USART1,USART_STOPBITS_1);
 	usart_set_mode(USART1,USART_MODE_TX_RX);
@@ -128,7 +128,7 @@ void tim3_isr(void) {
 
 	//uart_send_msg("Starting\n\r");
 
-	gpio_toggle(GPIOC,GPIO13);	/* LED on */
+	//gpio_toggle(GPIOC,GPIO13);	/* LED on */
 
 }
 

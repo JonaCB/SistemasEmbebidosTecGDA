@@ -282,7 +282,7 @@ void usart1_isr (void){
 				}
 				break;
 			case WAIT_VALUE:
-				if (chr == '.'){
+				if (chr == '\r'){
 					if (value_count > 0){
 						temp_value[value_count] = 0;
 						int val = atoi(temp_value);
