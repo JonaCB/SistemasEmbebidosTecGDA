@@ -4,17 +4,22 @@
 #include <libopencm3/stm32/timer.h>
 #include <libopencm3/stm32/usart.h>
 #include <libopencm3/cm3/nvic.h>
+#include <libopencm3/stm32/adc.h>
+#include "miniprintf.h"
+
 
 #define F_CLK 24000000
 #define PRESCALER_TIM3 F_CLK / 1000 //TIM3 frequency = 24Mhz/24K = 1khz
-#define PERIOD_TIM3 500 //500ms
+#define PERIOD_TIM3 100 //500ms
 
 static void gpio_setup(void);
 static void system_clock_setup(void);
 static void TIM3_setup(void);
 static void usart_setup(void);
+static void adc_setup(void);
 static inline void uart_putc( char ch);
 static void uart_send_msg( char *msg);
+static int uart_printf(const char *format,...);
 
 typedef enum {
   IDLE,
@@ -26,11 +31,18 @@ TxSMType tx_state = IDLE;
 
 char * msg_addr;
 
+int MaxTempTh = 32;
+int MinTempTh = 30;
+
+int count = 0;
+
+
 int main(void) {
 
 	system_clock_setup();
 	gpio_setup();
 	usart_setup();
+	adc_setup();
 	TIM3_setup();
 
 	for (;;) {
@@ -38,6 +50,40 @@ int main(void) {
 	}
 
 	return 0;
+}
+
+static void adc_setup(void){
+	rcc_periph_clock_enable(RCC_GPIOA);		// Enable GPIOA for ADC
+	gpio_set_mode(GPIOA,
+		GPIO_MODE_INPUT,
+		GPIO_CNF_INPUT_ANALOG,
+		GPIO0);
+
+
+	rcc_periph_clock_enable(RCC_ADC1);
+	adc_power_off(ADC1);
+	rcc_periph_reset_pulse(RST_ADC1);
+	rcc_set_adcpre(RCC_CFGR_ADCPRE_PCLK2_DIV2);	// Set. 12MHz, Max. 14MHz
+	adc_set_dual_mode(ADC_CR1_DUALMOD_IND);
+	adc_disable_scan_mode(ADC1);
+	adc_set_single_conversion_mode(ADC1);
+	adc_set_sample_time(ADC1, ADC_CHANNEL0, ADC_SMPR_SMP_239DOT5CYC);
+
+	adc_power_on(ADC1);
+	adc_reset_calibration(ADC1);
+	adc_calibrate_async(ADC1);
+	while ( adc_is_calibrating(ADC1) );
+
+}
+
+
+static uint16_t read_adc(uint8_t channel) {
+
+	adc_set_sample_time(ADC1,channel,ADC_SMPR_SMP_239DOT5CYC);
+	adc_set_regular_sequence(ADC1,1,&channel);
+	adc_start_conversion_direct(ADC1);
+	while ( !adc_eoc(ADC1) );
+	return adc_read_regular(ADC1);
 }
 
 static void usart_setup(void){
@@ -69,19 +115,19 @@ static void usart_setup(void){
 	usart_wait_send_ready (USART1);
 }
 
+
 static inline void uart_putc( char ch) {
-	tx_state = SENDING_CHAR;
-	usart_enable_tx_interrupt(USART1);
-	usart_send(USART1, ch);
-	//usart_send_blocking(USART1,ch);
+	usart_send_blocking(USART1,ch);
 }
 
-static void uart_send_msg( char *msg){
-	msg_addr = msg;
-	tx_state = SENDING_MSG;
-	usart_enable_tx_interrupt(USART1);
-	usart_send(USART1, (*msg_addr));
-	
+static int uart_printf(const char *format,...) {
+	va_list args;
+	int rc;
+
+	va_start(args,format);
+	rc = mini_vprintf_cooked(uart_putc,format,args);
+	va_end(args);
+	return rc;
 }
 
 static void gpio_setup(void) {
@@ -93,6 +139,14 @@ static void gpio_setup(void) {
 	gpio_set_mode(GPIOC,GPIO_MODE_OUTPUT_2_MHZ,
 		      GPIO_CNF_OUTPUT_PUSHPULL,GPIO13);
 	gpio_set(GPIOC,GPIO13); //start with led off
+
+
+	rcc_periph_clock_enable(RCC_GPIOA);		// Need GPIOA clock
+	gpio_set_mode(GPIOA,GPIO_MODE_OUTPUT_2_MHZ,
+		      GPIO_CNF_OUTPUT_PUSHPULL,GPIO1);
+	gpio_set(GPIOA,GPIO1); //start with led off
+
+
 }
 
 
@@ -126,9 +180,28 @@ void tim3_isr(void) {
 
 	timer_clear_flag(TIM3, TIM_SR_UIF);
 
-	//uart_send_msg("Starting\n\r");
+	int mV, temp;
+	mV = read_adc(ADC_CHANNEL0) * 330 / 4095;
+	temp = mV;
 
-	gpio_toggle(GPIOC,GPIO13);	/* LED on */
+	if (temp >= MaxTempTh){
+		gpio_clear(GPIOA,GPIO1); //on
+	}else{
+		gpio_set(GPIOA,GPIO1); //off
+	}
+	if (temp <= MinTempTh){
+		gpio_clear(GPIOC,GPIO13); //on
+	}else{
+		gpio_set(GPIOC,GPIO13); //off
+	}
+
+	if (count%5 == 0){
+		uart_printf("Temp: %dC, MaxTempTh: %dC, MinTempTh: %dC,\n\r", temp, MaxTempTh, MinTempTh);
+	}
+
+	
+	count++;
+	
 
 }
 
@@ -136,8 +209,7 @@ void usart1_isr (void){
 
 	if (usart_get_flag (USART1, USART_SR_RXNE )){ // Recieve flag
 		char chr = usart_recv(USART1);
-		usart_enable_tx_interrupt(USART1);
-		usart_send(USART1, chr);
+		uart_printf("%c\n\r",chr);
 	}
 	else if (usart_get_flag (USART1, USART_SR_TXE )){ // Transmit flag
 		usart_disable_tx_interrupt(USART1);
