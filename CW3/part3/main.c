@@ -5,8 +5,8 @@
 #include <libopencm3/stm32/usart.h>
 #include <libopencm3/cm3/nvic.h>
 #include <libopencm3/stm32/adc.h>
-#include "miniprintf.h"
-#include "string_conversion.h"
+#include "miniprintf/miniprintf.h"
+#include <stdlib.h>
 
 
 #define F_CLK 24000000 // 24Mhz

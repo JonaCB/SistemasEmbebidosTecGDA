@@ -1,0 +1,12 @@
+######################################################################
+#  Project
+######################################################################
+
+BINARY		= main
+SRCFILES	= main.c  uc_timer/uc_timer.c system_common/system_common.c  uc_interrupt/uc_interrupt.c miniprintf/miniprintf.c
+
+all: elf bin
+
+include ../../Makefile.incl
+
+# End
