@@ -1,18 +1,10 @@
 
-#include "uc_adc.h"
-
-#include <libopencm3/stm32/rcc.h>
-#include <libopencm3/stm32/gpio.h>
-#include <libopencm3/stm32/adc.h>
+#include "i2c_adc.h"
+#include "../uc_i2c/uc_i2c.h"
 
 
 void adc_pin_setup(void){
-    rcc_periph_clock_enable(RCC_GPIOA);		// Enable GPIOA for ADC
-	gpio_set_mode(GPIOA,
-		GPIO_MODE_INPUT,
-		GPIO_CNF_INPUT_ANALOG,
-		GPIO0);
-
+    i2c_setup();
 }
 
 void adc_setup(void){

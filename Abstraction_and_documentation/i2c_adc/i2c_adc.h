@@ -1,5 +1,5 @@
-#ifndef UC_ADC_H_   /* Include guard */
-#define UC_ADC_H_
+#ifndef I2C_ADC_H_   /* Include guard */
+#define I2C_ADC_H_
 
 #include <stdint.h>
 
@@ -10,4 +10,4 @@ uint16_t adc_read(void);
 
 
 
-#endif // UC_ADC_H_
+#endif // I2C_ADC_H_

@@ -8,5 +8,5 @@ void temp_sensor_setup(void){
 }
 
 uint16_t temp_sensor_read(void){
-    return adc_read(ADC_CHANNEL0);
+    return adc_read();
 }

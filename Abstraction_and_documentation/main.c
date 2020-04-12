@@ -1,5 +1,6 @@
 
 #include <libopencm3/stm32/rcc.h>
+#include <libopencm3/stm32/i2c.h>
 #include <libopencm3/stm32/gpio.h>
 #include <stdlib.h>
 #include "system_common/system_common.h"
@@ -8,6 +9,7 @@
 #include "uc_interrupt/uc_interrupt.h"
 #include "temp_sensor/temp_sensor.h"
 #include "uc_uart/uc_uart.h"
+#include "uc_i2c/uc_i2c.h"
 
 
 #define TIMER_PRESCALER        F_CLK / 1000 //TIM3 frequency = 24Mhz/24K = 1khz
@@ -47,6 +49,7 @@ static void timer_config(void);
 static void uart_config(void);
 void timer_interrupt(void);
 void uart_interrupt(char chr);
+
 
 typedef enum {
   SEND_INFO,
@@ -107,6 +110,7 @@ int main(void) {
 	dimmer_update_percentage(dimPercentage);
 	uart_config();
 	temp_sensor_setup();
+	i2c_setup();
 	timer_config();
 
 	for (;;) {
@@ -115,7 +119,6 @@ int main(void) {
 
 	return 0;
 }
-
 
 
 static void gpio_setup(void) {
@@ -173,7 +176,7 @@ static void uart_config(void){
 void timer_interrupt(void) {
 
 	int mV, temp;
-	mV = temp_sensor_read() * 330 / 4095;
+	mV = temp_sensor_read() * 330 / 4095; 
 	temp = mV;
 
 	if (temp > MaxTempTh){
@@ -197,6 +200,35 @@ void timer_interrupt(void) {
 			if (count%5 == 0){
 				uart_printf("Temp: %dC, MaxTempTh: %dC, MinTempTh: %dC, MaxTemp: %s, MinTemp: %s, Led Intensity: %d%%\n\r"
 							, temp, MaxTempTh, MinTempTh, led_status[max_led],led_status[min_led], dimPercentage);
+
+				uint8_t msb_data = 0x0;		// Read I2C byte
+				uint8_t lsb_data = 0x0;		// Read I2C byte
+				uint16_t data = 0;
+				uint8_t ads1115_addr = 0b01001000;
+				uint8_t conversion_reg = 0x0;
+				uint8_t config_reg = 0x1;
+				uint8_t config_msb = 0b11000100;
+				uint8_t config_lsb = 0b10000011;
+
+				i2c_start_addr(ads1115_addr,Write);
+				i2c_write(config_reg);
+				i2c_write(config_msb);
+				i2c_write(config_lsb);
+				i2c_stop();
+
+				i2c_start_addr(ads1115_addr,Write);
+				i2c_write_restart(conversion_reg,ads1115_addr);
+				msb_data = i2c_read(false);
+				lsb_data = i2c_read(true);
+				data = (msb_data <<8) + lsb_data;
+				int temp1;
+				temp1 = data * 210 / (65536/2);
+				i2c_stop();
+				uart_printf("\n\rMSB: %x\n\r", msb_data);
+				uart_printf("LSB: %x\n\r", lsb_data);
+				uart_printf("Data: %d\n\r", data);
+				uart_printf("Temp: %d\n\r", temp1);
+
 			}
 			break;
 		case WAIT_INPUT:
