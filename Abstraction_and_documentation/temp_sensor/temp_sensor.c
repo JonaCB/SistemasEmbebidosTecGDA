@@ -8,5 +8,6 @@ void temp_sensor_setup(void){
 }
 
 uint16_t temp_sensor_read(void){
-    return adc_read();
+	uint16_t adc_data = adc_read();
+    return (uint16_t)(adc_convert_voltage(adc_data)*100.0);
 }

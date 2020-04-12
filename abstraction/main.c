@@ -4,9 +4,10 @@
 #include <libopencm3/stm32/timer.h>
 #include <libopencm3/stm32/usart.h>
 #include <libopencm3/cm3/nvic.h>
-#include <libopencm3/stm32/adc.h>
-#include "miniprintf/miniprintf.h"
 #include <stdlib.h>
+#include "temp_sensor/temp_sensor.h"
+#include "uc_uart/uc_uart.h"
+#include "uc_timer/uc_timer.h"
 
 
 #define F_CLK 24000000 // 24Mhz
@@ -45,10 +46,6 @@ static void gpio_setup(void);
 static void system_clock_setup(void);
 static void TIM2_setup(void);
 static void TIM3_setup(void);
-static void usart_setup(void);
-static void adc_setup(void);
-static inline void uart_putc( char ch);
-static int uart_printf(const char *format,...);
 uint16_t get_pwm_percentage_counts(uint16_t percentage);
 
 typedef enum {
@@ -106,9 +103,9 @@ int main(void) {
 
 	system_clock_setup();
 	gpio_setup();
+	temp_sensor_setup();
 	TIM2_setup();
 	usart_setup();
-	adc_setup();
 	TIM3_setup();
 
 	for (;;) {
@@ -118,83 +115,8 @@ int main(void) {
 	return 0;
 }
 
-static void adc_setup(void){
-	rcc_periph_clock_enable(RCC_GPIOA);		// Enable GPIOA for ADC
-	gpio_set_mode(GPIOA,
-		GPIO_MODE_INPUT,
-		GPIO_CNF_INPUT_ANALOG,
-		GPIO0);
 
 
-	rcc_periph_clock_enable(RCC_ADC1);
-	adc_power_off(ADC1);
-	rcc_periph_reset_pulse(RST_ADC1);
-	rcc_set_adcpre(RCC_CFGR_ADCPRE_PCLK2_DIV2);	// Set. 12MHz, Max. 14MHz
-	adc_set_dual_mode(ADC_CR1_DUALMOD_IND);
-	adc_disable_scan_mode(ADC1);
-	adc_set_single_conversion_mode(ADC1);
-	adc_set_sample_time(ADC1, ADC_CHANNEL0, ADC_SMPR_SMP_239DOT5CYC);
-
-	adc_power_on(ADC1);
-	adc_reset_calibration(ADC1);
-	adc_calibrate_async(ADC1);
-	while ( adc_is_calibrating(ADC1) );
-
-}
-
-
-static uint16_t read_adc(uint8_t channel) {
-
-	adc_set_sample_time(ADC1,channel,ADC_SMPR_SMP_239DOT5CYC);
-	adc_set_regular_sequence(ADC1,1,&channel);
-	adc_start_conversion_direct(ADC1);
-	while ( !adc_eoc(ADC1) );
-	return adc_read_regular(ADC1);
-}
-
-static void usart_setup(void){
-
-	rcc_periph_clock_enable(RCC_GPIOA);
-	rcc_periph_clock_enable(RCC_USART1);
-
-	// UART TX on PA9 (GPIO_USART1_TX)
-	gpio_set_mode(GPIOA,
-		GPIO_MODE_OUTPUT_50_MHZ,
-		GPIO_CNF_OUTPUT_ALTFN_PUSHPULL,
-		GPIO_USART1_TX);
-	gpio_set_mode(GPIOA, GPIO_MODE_INPUT, 
-		GPIO_CNF_INPUT_FLOAT, 
-		GPIO_USART1_RX);
-
-	usart_set_baudrate(USART1,115200);
-	usart_set_databits(USART1,8);
-	usart_set_stopbits(USART1,USART_STOPBITS_1);
-	usart_set_mode(USART1,USART_MODE_TX_RX);
-	usart_set_parity(USART1,USART_PARITY_NONE);
-	usart_set_flow_control(USART1,USART_FLOWCONTROL_NONE);
-
-
-	usart_enable_rx_interrupt (USART1);
-	nvic_clear_pending_irq(NVIC_USART1_IRQ); 
-	nvic_enable_irq(NVIC_USART1_IRQ);
-	usart_enable(USART1);
-	usart_wait_send_ready (USART1);
-}
-
-
-static inline void uart_putc( char ch) {
-	usart_send_blocking(USART1,ch);
-}
-
-static int uart_printf(const char *format,...) {
-	va_list args;
-	int rc;
-
-	va_start(args,format);
-	rc = mini_vprintf_cooked(uart_putc,format,args);
-	va_end(args);
-	return rc;
-}
 
 static void gpio_setup(void) {
 
@@ -234,53 +156,24 @@ static void system_clock_setup(void) {
 
 static void TIM3_setup(void) {
 
-	timer_reset(TIM3);
-	rcc_periph_clock_enable(RCC_TIM3);
-	timer_set_prescaler(TIM3, PRESCALER_TIM3 - 1); //this doesn't worg for frequency > 65Mhz
-	timer_set_period(TIM3, PERIOD_TIM3 - 1); // period in ms
-	
-	// timer_enable_preload(TIM3);
-	// timer_update_on_overflow(TIM3);
-	// timer_enable_update_event(TIM3);
-	//timer_disable_preload(TIM3);
+	uc_timer_setup(TIM3, RCC_TIM3, PRESCALER_TIM3);
 
-	timer_enable_irq(TIM3,TIM_DIER_UIE); //update event interrupt
-	nvic_clear_pending_irq(NVIC_TIM3_IRQ); //interrupt number for TIM3 (pag. 202)
-	nvic_enable_irq(NVIC_TIM3_IRQ); //interrupt number for TIM3 (pag. 202)
+	uc_timer_set_period(TIM3, PERIOD_TIM3); // period in ms
 	
-	timer_enable_counter(TIM3);
+	uc_timer_enable_interrupt(TIM3, NVIC_TIM3_IRQ);
+
+	uc_timer_start(TIM3);
 	
 }
 
-
 static void TIM2_setup(void) {
 
-	// PA1 == TIM2.CH2	
-	rcc_periph_clock_enable(RCC_GPIOA);		// Need GPIOA clock
-	gpio_set_mode(GPIOA,GPIO_MODE_OUTPUT_50_MHZ,	// High speed
-		GPIO_CNF_OUTPUT_ALTFN_PUSHPULL,GPIO1);	// GPIOA1=TIM2.CH2
+		uc_timer_pin_setup(RCC_GPIOA, GPIOA, GPIO1);
 
-	rcc_periph_clock_enable(RCC_TIM2);		// Need TIM2 clock
-
-	// TIM2:
-	timer_disable_counter(TIM2);
-	rcc_periph_reset_pulse(RST_TIM2);
-
-	timer_set_mode(TIM2,
-		TIM_CR1_CKD_CK_INT,
-		TIM_CR1_CMS_EDGE,
-		TIM_CR1_DIR_UP);
-	timer_set_prescaler(TIM2,PRESCALER_TIM2-1); 
-	timer_enable_preload(TIM2);
-	timer_continuous_mode(TIM2);
-	timer_set_period(TIM2,PWM_PERIOD);
-
-	timer_disable_oc_output(TIM2,TIM_OC2); 
-	timer_set_oc_mode(TIM2,TIM_OC2,TIM_OCM_PWM2); //PWM2 because we are using CH2
-	timer_enable_oc_output(TIM2,TIM_OC2); //Enabling CH2 as output
-
-	timer_set_oc_value(TIM2,TIM_OC2,get_pwm_percentage_counts(dimPercentage) - 1); //Setting initial value tu 50%
-	timer_enable_counter(TIM2);
+	uc_timer_pwm_setup(TIM2, RCC_TIM2, PRESCALER_TIM2, TIM_OC2);
+	uc_timer_set_period(TIM2, PWM_PERIOD);
+	uc_timer_set_duty_cycle(TIM2, TIM_OC2, get_pwm_percentage_counts(dimPercentage));
+	uc_timer_start(TIM2);
 
 }
 
@@ -296,9 +189,8 @@ void tim3_isr(void) {
 
 	timer_clear_flag(TIM3, TIM_SR_UIF);
 
-	int mV, temp;
-	mV = read_adc(ADC_CHANNEL0) * 330 / 4095;
-	temp = mV;
+	int temp;
+	temp = temp_sensor_read();
 
 	if (temp > MaxTempTh){
 		gpio_clear(GPIOB,GPIO8); //on

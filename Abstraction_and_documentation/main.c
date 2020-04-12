@@ -1,13 +1,13 @@
 
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
-#include <stdlib.h>
 #include "system_common/system_common.h"
 #include "dimmer/dimmer.h"
 #include "uc_timer/uc_timer.h"
 #include "uc_interrupt/uc_interrupt.h"
 #include "temp_sensor/temp_sensor.h"
 #include "uc_uart/uc_uart.h"
+#include <stdlib.h>
 
 
 #define TIMER_PRESCALER        F_CLK / 1000 //TIM3 frequency = 24Mhz/24K = 1khz
