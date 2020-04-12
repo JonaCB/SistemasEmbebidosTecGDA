@@ -2,6 +2,7 @@
 #include <libopencm3/stm32/i2c.h>
 #include <libopencm3/stm32/gpio.h>
 #include "uc_i2c.h"
+#include <stdbool.h>
 
 void i2c_setup(void){
 

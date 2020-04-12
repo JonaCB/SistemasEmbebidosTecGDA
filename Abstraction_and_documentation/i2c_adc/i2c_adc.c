@@ -1,36 +1,47 @@
 
 #include "i2c_adc.h"
 #include "../uc_i2c/uc_i2c.h"
+#include <stdint.h>
+#include <stdbool.h>
 
+uint8_t ads1115_addr = 0b01001000;
+uint8_t conversion_reg = 0x0;
+uint8_t config_reg = 0x1;
+uint8_t config_msb = 0b11000100;
+uint8_t config_lsb = 0b10000011;
 
 void adc_pin_setup(void){
-    i2c_setup();
+
+
 }
 
 void adc_setup(void){
 
-	rcc_periph_clock_enable(RCC_ADC1);
-	adc_power_off(ADC1);
-	rcc_periph_reset_pulse(RST_ADC1);
-	rcc_set_adcpre(RCC_CFGR_ADCPRE_PCLK2_DIV2);	// Set. 12MHz, Max. 14MHz
-	adc_set_dual_mode(ADC_CR1_DUALMOD_IND);
-	adc_disable_scan_mode(ADC1);
-	adc_set_single_conversion_mode(ADC1);
-	adc_set_sample_time(ADC1, ADC_CHANNEL0, ADC_SMPR_SMP_239DOT5CYC);
+    i2c_setup();
 
-	adc_power_on(ADC1);
-	adc_reset_calibration(ADC1);
-	adc_calibrate_async(ADC1);
-	while ( adc_is_calibrating(ADC1) );
+    i2c_start_addr(ads1115_addr,Write);
+    i2c_write(config_reg);
+    i2c_write(config_msb);
+    i2c_write(config_lsb);
+    i2c_stop();
 
 }
 
 uint16_t adc_read(void){
 
-    adc_set_sample_time(ADC1,ADC_CHANNEL0,ADC_SMPR_SMP_239DOT5CYC);
-	adc_set_regular_sequence(ADC1,1,ADC_CHANNEL0);
-	adc_start_conversion_direct(ADC1);
-	while ( !adc_eoc(ADC1) );
-	return adc_read_regular(ADC1);
+    uint8_t msb_data = 0x0;		// Read I2C byte
+    uint8_t lsb_data = 0x0;		// Read I2C byte
+    uint16_t data = 0;
+
+    i2c_start_addr(ads1115_addr,Write);
+    i2c_write_restart(conversion_reg,ads1115_addr);
+    msb_data = i2c_read(false);
+    lsb_data = i2c_read(true);
+    data = (msb_data <<8) + lsb_data;
+    int temp;
+    temp = data * 210 / (65536/2);
+    i2c_stop();
+
+    return temp;
 
 }

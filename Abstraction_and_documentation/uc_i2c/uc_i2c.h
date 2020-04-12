@@ -2,6 +2,7 @@
 #define UC_I2C_H_
 
 #include <stdint.h>
+#include <stdbool.h>
 
 enum I2C_RW {
 	Read = 1,

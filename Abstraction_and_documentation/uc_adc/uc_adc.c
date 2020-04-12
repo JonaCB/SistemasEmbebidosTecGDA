@@ -39,6 +39,6 @@ uint16_t adc_read(void){
 	adc_set_regular_sequence(ADC1,1,ADC_CHANNEL0);
 	adc_start_conversion_direct(ADC1);
 	while ( !adc_eoc(ADC1) );
-	return adc_read_regular(ADC1);
+	return adc_read_regular(ADC1) * 330 / 4095;
 
 }
