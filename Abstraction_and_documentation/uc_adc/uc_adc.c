@@ -5,7 +5,9 @@
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/adc.h>
 
-
+/**
+ * Sets up the ADC peripheral pin ports needed.
+ */
 void adc_pin_setup(void){
     rcc_periph_clock_enable(RCC_GPIOA);		// Enable GPIOA for ADC
 	gpio_set_mode(GPIOA,
@@ -15,8 +17,10 @@ void adc_pin_setup(void){
 
 }
 
+/**
+ * Sets up the ADC peripheral.
+ */
 void adc_setup(void){
-
 	rcc_periph_clock_enable(RCC_ADC1);
 	adc_power_off(ADC1);
 	rcc_periph_reset_pulse(RST_ADC1);
@@ -30,12 +34,14 @@ void adc_setup(void){
 	adc_reset_calibration(ADC1);
 	adc_calibrate_async(ADC1);
 	while ( adc_is_calibrating(ADC1) );
-
 }
 
+/**
+ * Reads the ADC conversion value.
+ * @param[out] adc_read_value.
+ */
 uint16_t adc_read(void){
-
-    adc_set_sample_time(ADC1,ADC_CHANNEL0,ADC_SMPR_SMP_239DOT5CYC);
+  adc_set_sample_time(ADC1,ADC_CHANNEL0,ADC_SMPR_SMP_239DOT5CYC);
 	adc_set_regular_sequence(ADC1,1,ADC_CHANNEL0);
 	adc_start_conversion_direct(ADC1);
 	while ( !adc_eoc(ADC1) );
@@ -43,6 +49,10 @@ uint16_t adc_read(void){
 
 }
 
+/**
+ * Reads the ADC value and scales it up to volts.
+ * @param[out] voltage.
+ */
 float adc_convert_voltage(uint16_t data){
 	float scale = 3.3/4096.0;
 	return ((float)(data))*scale;
