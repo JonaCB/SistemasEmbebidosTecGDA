@@ -1,3 +1,4 @@
+//  Copyright 2020 Copyright Equipo 2
 #ifndef I2C_ADC_H_   /* Include guard */
 #define I2C_ADC_H_
 
@@ -8,4 +9,4 @@ void adc_setup(void);
 uint16_t adc_read(void);
 float adc_convert_voltage(uint16_t data);
 
-#endif // I2C_ADC_H_
+#endif  // ABSTRACTION_AND_DOCUMENTATION_I2C_ADC_I2C_ADC_H_

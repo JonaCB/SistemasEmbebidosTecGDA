@@ -1,3 +1,4 @@
+//  Copyright 2020 Copyright Equipo 2
 #ifndef TEMP_SENSOR_H_   /* Include guard */
 #define TEMP_SENSOR_H_
 
@@ -14,4 +15,4 @@
 void temp_sensor_setup(void);
 uint16_t temp_sensor_read(void);
 
-#endif // TEMP_SENSOR_H_
+#endif  // ABSTRACTION_AND_DOCUMENTATION_TEMP_SENSOR_TEMP_SENSOR_H_

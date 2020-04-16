@@ -1,3 +1,4 @@
+//  Copyright 2020 Copyright Equipo 2
 #ifndef UC_INTERRUPT_H_   /* Include guard */
 #define UC_INTERRUPT_H_
 
@@ -10,7 +11,7 @@ typedef enum {
   ISR_TIM2,
   ISR_TIM3,
   ISR_TIM4
-} ISRType; 
+} ISRType;
 
 
 void uc_interrupt_attatch_function(ISRType isr, void (*func)(void));
@@ -18,4 +19,4 @@ void uc_interrupt_detach_function(ISRType isr);
 void uc_interrupt_attatch_uart_function(void (*func)(char));
 
 
-#endif // UC_INTERRUPT_H_
+#endif  // ABSTRACTION_AND_DOCUMENTATION_UC_INTERRUPT_UC_INTERRUPT_H_
