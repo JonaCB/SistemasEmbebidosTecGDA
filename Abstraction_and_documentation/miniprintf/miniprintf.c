@@ -7,7 +7,7 @@
  * with full responsibility and at your own risk.
  */
 #include <string.h>
-#include "miniprintf/miniprintf.h"
+#include "miniprintf.h"
 
 /*
  * Internal structure for I/O

@@ -1,5 +1,5 @@
 //  Copyright 2020 Copyright Equipo 2
-#include "uc_uart/uc_uart.h"
+#include "uc_uart.h"
 #include <libopencm3/stm32/usart.h>
 #include <libopencm3/cm3/nvic.h>
 #include <libopencm3/stm32/rcc.h>

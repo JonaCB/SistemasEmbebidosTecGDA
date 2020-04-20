@@ -1,5 +1,5 @@
 //  Copyright 2020 Copyright Equipo 2
-#include "system_common/system_common.h"
+#include "system_common.h"
 
 /**
  * Sets up the system clock frequency.

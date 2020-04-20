@@ -1,5 +1,5 @@
 //  Copyright 2020 Copyright Equipo 2
-#include "uc_interrupt/uc_interrupt.h"
+#include "uc_interrupt.h"
 
 void void_func(void);
 void void_func() {  return;}

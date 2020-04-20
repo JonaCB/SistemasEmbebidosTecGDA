@@ -1,5 +1,5 @@
 //  Copyright 2020 Copyright Equipo 2
-#include "uc_timer/uc_timer.h"
+#include "uc_timer.h"
 
 void uc_timer_pwm_pin_setup(enum rcc_periph_clken gpio_clk,  \
     uint32_t gpio_port,  uint16_t gpio_pin)  {

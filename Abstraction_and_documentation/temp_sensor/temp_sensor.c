@@ -1,5 +1,5 @@
 //  Copyright 2020 Copyright Equipo 2
-#include "temp_sensor/temp_sensor.h"
+#include "temp_sensor.h"
 
 #include <libopencm3/stm32/adc.h>
 

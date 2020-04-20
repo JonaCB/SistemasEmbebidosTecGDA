@@ -1,5 +1,5 @@
 // Copyright 2020 Equipo 2
-#include "dimmer/dimmer.h"
+#include "dimmer.h"
 #include "../uc_timer/uc_timer.h"
 #include "../system_common/system_common.h"
 
