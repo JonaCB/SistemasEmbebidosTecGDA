@@ -1,3 +1,4 @@
+/// @file i2c_adc.c
 //  Copyright 2020 Copyright Equipo 2
 #include "i2c_adc.h"
 #include "../uc_i2c/uc_i2c.h"

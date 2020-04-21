@@ -1,3 +1,4 @@
+/// @file dimmer.c
 // Copyright 2020 Equipo 2
 #include "dimmer.h"
 #include "../uc_timer/uc_timer.h"

@@ -1,8 +1,12 @@
+/// @file uc_timer.c
 //  Copyright 2020 Copyright Equipo 2
 #include "uc_timer.h"
 
 /**
  * Sets up the PWM peripheral pin ports needed.
+ * @param[in] gpio_clk
+ * @param[in] gpio_port
+ * @param[in] gpio_pin
  */
 void uc_timer_pwm_pin_setup(enum rcc_periph_clken gpio_clk,  \
     uint32_t gpio_port,  uint16_t gpio_pin)  {
@@ -15,6 +19,9 @@ void uc_timer_pwm_pin_setup(enum rcc_periph_clken gpio_clk,  \
 
 /**
  * Sets up the timer prescaler and enabled the clock.
+ * @param[in] timer_clk
+ * @param[in] timer
+ * @param[in] prescaler
  */
 void uc_timer_setup(enum rcc_periph_clken timer_clk,  uint32_t timer, \
     uint32_t prescaler)  {
@@ -27,6 +34,10 @@ void uc_timer_setup(enum rcc_periph_clken timer_clk,  uint32_t timer, \
 
 /**
  * Enables and sets up the timer's pwm.
+ * @param[in] clock
+ * @param[in] timer
+ * @param[in] channel
+ * @param[in] prescaler
  */
 void uc_timer_pwm_setup(enum rcc_periph_clken timer_clk,  uint32_t timer,  \
     enum tim_oc_id channel,  uint32_t prescaler)  {
@@ -49,6 +60,8 @@ void uc_timer_pwm_setup(enum rcc_periph_clken timer_clk,  uint32_t timer,  \
 
 /**
  * Configures the timer's period.
+ * @param[in] timer
+ * @param[in] period
  */
 void uc_timer_config_period(uint32_t timer,  uint32_t period) {
     if (period == 0) period++;
@@ -57,6 +70,8 @@ void uc_timer_config_period(uint32_t timer,  uint32_t period) {
 
 /**
  * Configures the timer's pwm duty cycle.
+ * @param[in] timer
+ * @param[in] channel
  */
 void uc_timer_pwm_config_duty_cycle(uint32_t timer,  enum tim_oc_id channel,  \
     uint32_t duty_cycle) {
@@ -66,6 +81,8 @@ void uc_timer_pwm_config_duty_cycle(uint32_t timer,  enum tim_oc_id channel,  \
 
 /**
  * Enables timer's interrupt.
+ * @param[in] timer
+ * @param[in] irqn
  */
 void uc_timer_enable_interrupt(uint32_t timer,  uint8_t irqn) {
     timer_enable_irq(timer, TIM_DIER_UIE);  // update event interrupt
@@ -75,6 +92,7 @@ void uc_timer_enable_interrupt(uint32_t timer,  uint8_t irqn) {
 
 /**
  * Starts the timer.
+ * @param[in] timer
  */
 void uc_timer_start(uint32_t timer) {
     timer_enable_counter(timer);
@@ -82,6 +100,7 @@ void uc_timer_start(uint32_t timer) {
 
 /**
  * Stops the tmer.
+ * @param[in] timer
  */
 void uc_timer_stop(uint32_t timer) {
     timer_disable_counter(timer);
