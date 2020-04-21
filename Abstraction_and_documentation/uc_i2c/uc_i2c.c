@@ -1,3 +1,4 @@
+/// @file uc_i2c.c
 //  Copyright 2020 Copyright Equipo 2
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/i2c.h>
@@ -31,7 +32,9 @@ void i2c_setup(void) {
 }
 
 /**
- *Sends the I2C start address and waits for Acknowledge.
+ * Sends the I2C start address and waits for Acknowledge.
+ * @param[in] Address
+ * @param[in] Read or write
  */
 void i2c_start_addr(uint8_t addr, enum I2C_RW rw)  {
     while ( I2C_SR2(I2C1) & I2C_SR2_BUSY ) {}            // Block until not busy
@@ -60,6 +63,8 @@ void i2c_start_addr(uint8_t addr, enum I2C_RW rw)  {
 
 /**
  * Writes restart instruction.
+ * @param[in] Byte
+ * @param[in] Address
  */
 void i2c_write_restart(uint8_t byte, uint8_t addr)  {
     i2c_send_data(I2C1, byte);
@@ -95,6 +100,8 @@ void i2c_write_restart(uint8_t byte, uint8_t addr)  {
 
 /**
  * Reads a value using the I2C interface.
+ * @param[in] Is last byte
+ * @param[out] Data
  */
 uint8_t i2c_read(bool lastf)  {
     if ( lastf )

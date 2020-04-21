@@ -1,3 +1,4 @@
+/// @file temp_sensor.c
 //  Copyright 2020 Copyright Equipo 2
 #include "temp_sensor.h"
 
