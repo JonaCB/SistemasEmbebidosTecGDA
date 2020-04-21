@@ -1,38 +1,40 @@
-\hypertarget{uc__adc_8c}{}\doxysection{C\+:/\+Users/afloress/\+Documents/\+Git\+Hub/\+Sistemas\+Embebidos\+Tec\+G\+D\+A/\+Abstraction\+\_\+and\+\_\+documentation/uc\+\_\+adc/uc\+\_\+adc.c File Reference}
-\label{uc__adc_8c}\index{C:/Users/afloress/Documents/GitHub/SistemasEmbebidosTecGDA/Abstraction\_and\_documentation/uc\_adc/uc\_adc.c@{C:/Users/afloress/Documents/GitHub/SistemasEmbebidosTecGDA/Abstraction\_and\_documentation/uc\_adc/uc\_adc.c}}
+\hypertarget{uc__adc_8c}{}\section{/home/luis9705/stm32f103c8t6/\+Sistemas\+Embebidos\+Tec\+G\+D\+A/\+Abstraction\+\_\+and\+\_\+documentation/uc\+\_\+adc/uc\+\_\+adc.c File Reference}
+\label{uc__adc_8c}\index{/home/luis9705/stm32f103c8t6/\+Sistemas\+Embebidos\+Tec\+G\+D\+A/\+Abstraction\+\_\+and\+\_\+documentation/uc\+\_\+adc/uc\+\_\+adc.\+c@{/home/luis9705/stm32f103c8t6/\+Sistemas\+Embebidos\+Tec\+G\+D\+A/\+Abstraction\+\_\+and\+\_\+documentation/uc\+\_\+adc/uc\+\_\+adc.\+c}}
 {\ttfamily \#include \char`\"{}uc\+\_\+adc/uc\+\_\+adc.\+h\char`\"{}}\newline
 {\ttfamily \#include $<$libopencm3/stm32/rcc.\+h$>$}\newline
 {\ttfamily \#include $<$libopencm3/stm32/gpio.\+h$>$}\newline
 {\ttfamily \#include $<$libopencm3/stm32/adc.\+h$>$}\newline
-\doxysubsection*{Functions}
+Include dependency graph for uc\+\_\+adc.\+c\+:
+% FIG 0
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \mbox{\hyperlink{uc__adc_8c_a20b5c387c4a600f7056c57935e572512}{adc\+\_\+pin\+\_\+setup}} (void)
+void \hyperlink{uc__adc_8c_a20b5c387c4a600f7056c57935e572512}{adc\+\_\+pin\+\_\+setup} (void)
 \begin{DoxyCompactList}\small\item\em $<$128 S\+PS, Disable \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{uc__adc_8c_a3c5d2bf67a701f0cb6556568addb2266}{adc\+\_\+setup}} (void)
+void \hyperlink{uc__adc_8c_a3c5d2bf67a701f0cb6556568addb2266}{adc\+\_\+setup} (void)
 \item 
-uint16\+\_\+t \mbox{\hyperlink{uc__adc_8c_a5af05cc48d199cae150afa5751e4ae58}{adc\+\_\+read}} (void)
+uint16\+\_\+t \hyperlink{uc__adc_8c_a5af05cc48d199cae150afa5751e4ae58}{adc\+\_\+read} (void)
 \item 
-float \mbox{\hyperlink{uc__adc_8c_ace0c00b5cceabf6f8fdb62b4143ec7cc}{adc\+\_\+convert\+\_\+voltage}} (uint16\+\_\+t data)
+float \hyperlink{uc__adc_8c_ace0c00b5cceabf6f8fdb62b4143ec7cc}{adc\+\_\+convert\+\_\+voltage} (uint16\+\_\+t data)
 \end{DoxyCompactItemize}
 
 
-\doxysubsection{Function Documentation}
+\subsection{Function Documentation}
 \mbox{\Hypertarget{uc__adc_8c_ace0c00b5cceabf6f8fdb62b4143ec7cc}\label{uc__adc_8c_ace0c00b5cceabf6f8fdb62b4143ec7cc}} 
-\index{uc\_adc.c@{uc\_adc.c}!adc\_convert\_voltage@{adc\_convert\_voltage}}
-\index{adc\_convert\_voltage@{adc\_convert\_voltage}!uc\_adc.c@{uc\_adc.c}}
-\doxysubsubsection{\texorpdfstring{adc\_convert\_voltage()}{adc\_convert\_voltage()}}
+\index{uc\+\_\+adc.\+c@{uc\+\_\+adc.\+c}!adc\+\_\+convert\+\_\+voltage@{adc\+\_\+convert\+\_\+voltage}}
+\index{adc\+\_\+convert\+\_\+voltage@{adc\+\_\+convert\+\_\+voltage}!uc\+\_\+adc.\+c@{uc\+\_\+adc.\+c}}
+\subsubsection{\texorpdfstring{adc\+\_\+convert\+\_\+voltage()}{adc\_convert\_voltage()}}
 {\footnotesize\ttfamily float adc\+\_\+convert\+\_\+voltage (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{data }\end{DoxyParamCaption})}
 
 Reads the A\+DC value and scales it up to volts. 
 \begin{DoxyParams}[1]{Parameters}
-\mbox{\texttt{ out}}  & {\em voltage.} & \\
+\mbox{\tt out}  & {\em voltage.} & \\
 \hline
 \end{DoxyParams}
 \mbox{\Hypertarget{uc__adc_8c_a20b5c387c4a600f7056c57935e572512}\label{uc__adc_8c_a20b5c387c4a600f7056c57935e572512}} 
-\index{uc\_adc.c@{uc\_adc.c}!adc\_pin\_setup@{adc\_pin\_setup}}
-\index{adc\_pin\_setup@{adc\_pin\_setup}!uc\_adc.c@{uc\_adc.c}}
-\doxysubsubsection{\texorpdfstring{adc\_pin\_setup()}{adc\_pin\_setup()}}
+\index{uc\+\_\+adc.\+c@{uc\+\_\+adc.\+c}!adc\+\_\+pin\+\_\+setup@{adc\+\_\+pin\+\_\+setup}}
+\index{adc\+\_\+pin\+\_\+setup@{adc\+\_\+pin\+\_\+setup}!uc\+\_\+adc.\+c@{uc\+\_\+adc.\+c}}
+\subsubsection{\texorpdfstring{adc\+\_\+pin\+\_\+setup()}{adc\_pin\_setup()}}
 {\footnotesize\ttfamily void adc\+\_\+pin\+\_\+setup (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
 
 
@@ -40,24 +42,24 @@ Reads the A\+DC value and scales it up to volts.
 $<$128 S\+PS, Disable 
 
 Sets up the A\+DC peripheral pin ports needed. \mbox{\Hypertarget{uc__adc_8c_a5af05cc48d199cae150afa5751e4ae58}\label{uc__adc_8c_a5af05cc48d199cae150afa5751e4ae58}} 
-\index{uc\_adc.c@{uc\_adc.c}!adc\_read@{adc\_read}}
-\index{adc\_read@{adc\_read}!uc\_adc.c@{uc\_adc.c}}
-\doxysubsubsection{\texorpdfstring{adc\_read()}{adc\_read()}}
+\index{uc\+\_\+adc.\+c@{uc\+\_\+adc.\+c}!adc\+\_\+read@{adc\+\_\+read}}
+\index{adc\+\_\+read@{adc\+\_\+read}!uc\+\_\+adc.\+c@{uc\+\_\+adc.\+c}}
+\subsubsection{\texorpdfstring{adc\+\_\+read()}{adc\_read()}}
 {\footnotesize\ttfamily uint16\+\_\+t adc\+\_\+read (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
 
 Reads the A\+DC conversion value. 
 \begin{DoxyParams}[1]{Parameters}
-\mbox{\texttt{ out}}  & {\em adc\+\_\+read\+\_\+value.} & \\
+\mbox{\tt out}  & {\em adc\+\_\+read\+\_\+value.} & \\
 \hline
 \end{DoxyParams}
 M\+SB Read I2C byte
 
 L\+SB Read I2C byte
 
-Full data\mbox{\Hypertarget{uc__adc_8c_a3c5d2bf67a701f0cb6556568addb2266}\label{uc__adc_8c_a3c5d2bf67a701f0cb6556568addb2266}} 
-\index{uc\_adc.c@{uc\_adc.c}!adc\_setup@{adc\_setup}}
-\index{adc\_setup@{adc\_setup}!uc\_adc.c@{uc\_adc.c}}
-\doxysubsubsection{\texorpdfstring{adc\_setup()}{adc\_setup()}}
+Full data \mbox{\Hypertarget{uc__adc_8c_a3c5d2bf67a701f0cb6556568addb2266}\label{uc__adc_8c_a3c5d2bf67a701f0cb6556568addb2266}} 
+\index{uc\+\_\+adc.\+c@{uc\+\_\+adc.\+c}!adc\+\_\+setup@{adc\+\_\+setup}}
+\index{adc\+\_\+setup@{adc\+\_\+setup}!uc\+\_\+adc.\+c@{uc\+\_\+adc.\+c}}
+\subsubsection{\texorpdfstring{adc\+\_\+setup()}{adc\_setup()}}
 {\footnotesize\ttfamily void adc\+\_\+setup (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
 
 Sets up the A\+DC peripheral. 

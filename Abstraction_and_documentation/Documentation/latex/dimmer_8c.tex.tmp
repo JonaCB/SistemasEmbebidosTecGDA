@@ -1,0 +1,49 @@
+\hypertarget{dimmer_8c}{}\section{/home/luis9705/stm32f103c8t6/\+Sistemas\+Embebidos\+Tec\+G\+D\+A/\+Abstraction\+\_\+and\+\_\+documentation/dimmer/dimmer.c File Reference}
+\label{dimmer_8c}\index{/home/luis9705/stm32f103c8t6/\+Sistemas\+Embebidos\+Tec\+G\+D\+A/\+Abstraction\+\_\+and\+\_\+documentation/dimmer/dimmer.\+c@{/home/luis9705/stm32f103c8t6/\+Sistemas\+Embebidos\+Tec\+G\+D\+A/\+Abstraction\+\_\+and\+\_\+documentation/dimmer/dimmer.\+c}}
+{\ttfamily \#include \char`\"{}dimmer.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../uc\+\_\+timer/uc\+\_\+timer.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../system\+\_\+common/system\+\_\+common.\+h\char`\"{}}\newline
+Include dependency graph for dimmer.\+c\+:
+% FIG 0
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+uint16\+\_\+t \hyperlink{dimmer_8c_a2f9808488de8a74c42eedde0d46ced1b}{get\+\_\+pwm\+\_\+percentage\+\_\+counts} (uint16\+\_\+t percentage)
+\item 
+void \hyperlink{dimmer_8c_aa06666f70859d5c0b01c872f94f92eb7}{dimmer\+\_\+setup} (void)
+\item 
+void \hyperlink{dimmer_8c_ae8a385925410d90fd853defaee3c826c}{dimmer\+\_\+update\+\_\+percentage} (uint16\+\_\+t percentage)
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{dimmer_8c_aa06666f70859d5c0b01c872f94f92eb7}\label{dimmer_8c_aa06666f70859d5c0b01c872f94f92eb7}} 
+\index{dimmer.\+c@{dimmer.\+c}!dimmer\+\_\+setup@{dimmer\+\_\+setup}}
+\index{dimmer\+\_\+setup@{dimmer\+\_\+setup}!dimmer.\+c@{dimmer.\+c}}
+\subsubsection{\texorpdfstring{dimmer\+\_\+setup()}{dimmer\_setup()}}
+{\footnotesize\ttfamily void dimmer\+\_\+setup (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Initializes the timer, sets it up as a P\+WM and starts the timer. \mbox{\Hypertarget{dimmer_8c_ae8a385925410d90fd853defaee3c826c}\label{dimmer_8c_ae8a385925410d90fd853defaee3c826c}} 
+\index{dimmer.\+c@{dimmer.\+c}!dimmer\+\_\+update\+\_\+percentage@{dimmer\+\_\+update\+\_\+percentage}}
+\index{dimmer\+\_\+update\+\_\+percentage@{dimmer\+\_\+update\+\_\+percentage}!dimmer.\+c@{dimmer.\+c}}
+\subsubsection{\texorpdfstring{dimmer\+\_\+update\+\_\+percentage()}{dimmer\_update\_percentage()}}
+{\footnotesize\ttfamily void dimmer\+\_\+update\+\_\+percentage (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{percentage }\end{DoxyParamCaption})}
+
+Updates the dimming intensity of the light. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em percentage} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{dimmer_8c_a2f9808488de8a74c42eedde0d46ced1b}\label{dimmer_8c_a2f9808488de8a74c42eedde0d46ced1b}} 
+\index{dimmer.\+c@{dimmer.\+c}!get\+\_\+pwm\+\_\+percentage\+\_\+counts@{get\+\_\+pwm\+\_\+percentage\+\_\+counts}}
+\index{get\+\_\+pwm\+\_\+percentage\+\_\+counts@{get\+\_\+pwm\+\_\+percentage\+\_\+counts}!dimmer.\+c@{dimmer.\+c}}
+\subsubsection{\texorpdfstring{get\+\_\+pwm\+\_\+percentage\+\_\+counts()}{get\_pwm\_percentage\_counts()}}
+{\footnotesize\ttfamily uint16\+\_\+t get\+\_\+pwm\+\_\+percentage\+\_\+counts (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{percentage }\end{DoxyParamCaption})}
+
+Calculates a percentage of dimming given a constant. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em percentage} & \\
+\hline
+\mbox{\tt out}  & {\em counts} & \\
+\hline
+\end{DoxyParams}

@@ -1,6 +1,6 @@
 /// @file uc_adc.c
 //  Copyright 2020 Copyright Equipo 2
-#include "uc_adc/uc_adc.h"
+#include "uc_adc.h"
 
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
