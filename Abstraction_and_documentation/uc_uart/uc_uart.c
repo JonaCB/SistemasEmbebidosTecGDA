@@ -16,7 +16,9 @@ void uart_putc(char ch)  {
 }
 
 /**
- * Prints UART ???
+ * Prints UART message
+ * param[in] format
+ * param[out] rc
  */
 int uart_printf(const char *format, ...)  {
     va_list args;

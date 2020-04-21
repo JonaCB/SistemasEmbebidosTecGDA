@@ -1,0 +1,32 @@
+\hypertarget{temp__sensor_8c}{}\doxysection{C\+:/\+Users/afloress/\+Documents/\+Git\+Hub/\+Sistemas\+Embebidos\+Tec\+G\+D\+A/\+Abstraction\+\_\+and\+\_\+documentation/temp\+\_\+sensor/temp\+\_\+sensor.c File Reference}
+\label{temp__sensor_8c}\index{C:/Users/afloress/Documents/GitHub/SistemasEmbebidosTecGDA/Abstraction\_and\_documentation/temp\_sensor/temp\_sensor.c@{C:/Users/afloress/Documents/GitHub/SistemasEmbebidosTecGDA/Abstraction\_and\_documentation/temp\_sensor/temp\_sensor.c}}
+{\ttfamily \#include \char`\"{}temp\+\_\+sensor.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$libopencm3/stm32/adc.\+h$>$}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{temp__sensor_8c_a644cff7a2afc429486aeb490508b96bb}{temp\+\_\+sensor\+\_\+setup}} (void)
+\item 
+uint16\+\_\+t \mbox{\hyperlink{temp__sensor_8c_acf1e2f3f0af7b824e2e09d7354e7389a}{temp\+\_\+sensor\+\_\+read}} (void)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{temp__sensor_8c_acf1e2f3f0af7b824e2e09d7354e7389a}\label{temp__sensor_8c_acf1e2f3f0af7b824e2e09d7354e7389a}} 
+\index{temp\_sensor.c@{temp\_sensor.c}!temp\_sensor\_read@{temp\_sensor\_read}}
+\index{temp\_sensor\_read@{temp\_sensor\_read}!temp\_sensor.c@{temp\_sensor.c}}
+\doxysubsubsection{\texorpdfstring{temp\_sensor\_read()}{temp\_sensor\_read()}}
+{\footnotesize\ttfamily uint16\+\_\+t temp\+\_\+sensor\+\_\+read (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Reads the A\+DC value and returns the temperature in degrees. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ out}}  & {\em temperature} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{temp__sensor_8c_a644cff7a2afc429486aeb490508b96bb}\label{temp__sensor_8c_a644cff7a2afc429486aeb490508b96bb}} 
+\index{temp\_sensor.c@{temp\_sensor.c}!temp\_sensor\_setup@{temp\_sensor\_setup}}
+\index{temp\_sensor\_setup@{temp\_sensor\_setup}!temp\_sensor.c@{temp\_sensor.c}}
+\doxysubsubsection{\texorpdfstring{temp\_sensor\_setup()}{temp\_sensor\_setup()}}
+{\footnotesize\ttfamily void temp\+\_\+sensor\+\_\+setup (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Sets up the A\+DC peripherals needed for the temperature sensor. 
