@@ -1,5 +1,5 @@
-\hypertarget{uc__uart_8c}{}\doxysection{C\+:/\+Users/afloress/\+Documents/\+Git\+Hub/\+Sistemas\+Embebidos\+Tec\+G\+D\+A/\+Abstraction\+\_\+and\+\_\+documentation/uc\+\_\+uart/uc\+\_\+uart.c File Reference}
-\label{uc__uart_8c}\index{C:/Users/afloress/Documents/GitHub/SistemasEmbebidosTecGDA/Abstraction\_and\_documentation/uc\_uart/uc\_uart.c@{C:/Users/afloress/Documents/GitHub/SistemasEmbebidosTecGDA/Abstraction\_and\_documentation/uc\_uart/uc\_uart.c}}
+\hypertarget{uc__uart_8c}{}\doxysection{Git\+Hub/\+Sistemas\+Embebidos\+Tec\+G\+D\+A/\+Abstraction\+\_\+and\+\_\+documentation/uc\+\_\+uart/uc\+\_\+uart.c File Reference}
+\label{uc__uart_8c}\index{GitHub/SistemasEmbebidosTecGDA/Abstraction\_and\_documentation/uc\_uart/uc\_uart.c@{GitHub/SistemasEmbebidosTecGDA/Abstraction\_and\_documentation/uc\_uart/uc\_uart.c}}
 {\ttfamily \#include \char`\"{}uc\+\_\+uart.\+h\char`\"{}}\newline
 {\ttfamily \#include $<$libopencm3/stm32/usart.\+h$>$}\newline
 {\ttfamily \#include $<$libopencm3/cm3/nvic.\+h$>$}\newline
@@ -9,9 +9,9 @@
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \mbox{\hyperlink{uc__uart_8c_a7c50e670956187cd7e83aefb288153ef}{uart\+\_\+putc}} (char ch)
+void \mbox{\hyperlink{uc__uart_8c_ae468e0937557eefb10705cec62e1599b}{uart\+\_\+putc}} (char ch)
 \item 
-int \mbox{\hyperlink{uc__uart_8c_a0b205b8518c0e7c405db07a77845bf3f}{uart\+\_\+printf}} (const char $\ast$format,...)
+int \mbox{\hyperlink{uc__uart_8c_a953fcdef2bec3905b52c22983a8567eb}{uart\+\_\+printf}} (const char $\ast$format,...)
 \item 
 void \mbox{\hyperlink{uc__uart_8c_a633dd65feec2790697c7d191a2434531}{uart\+\_\+pin\+\_\+setup}} (void)
 \item 
@@ -36,17 +36,17 @@ Enables U\+A\+RT receiving interrupt. \mbox{\Hypertarget{uc__uart_8c_a633dd65fee
 \doxysubsubsection{\texorpdfstring{uart\_pin\_setup()}{uart\_pin\_setup()}}
 {\footnotesize\ttfamily void uart\+\_\+pin\+\_\+setup (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
 
-Sets up the U\+A\+RT peripheral pin ports needed. \mbox{\Hypertarget{uc__uart_8c_a0b205b8518c0e7c405db07a77845bf3f}\label{uc__uart_8c_a0b205b8518c0e7c405db07a77845bf3f}} 
+Sets up the U\+A\+RT peripheral pin ports needed. \mbox{\Hypertarget{uc__uart_8c_a953fcdef2bec3905b52c22983a8567eb}\label{uc__uart_8c_a953fcdef2bec3905b52c22983a8567eb}} 
 \index{uc\_uart.c@{uc\_uart.c}!uart\_printf@{uart\_printf}}
 \index{uart\_printf@{uart\_printf}!uc\_uart.c@{uc\_uart.c}}
 \doxysubsubsection{\texorpdfstring{uart\_printf()}{uart\_printf()}}
-{\footnotesize\ttfamily static int uart\+\_\+printf (\begin{DoxyParamCaption}\item[{const char $\ast$}]{format,  }\item[{}]{... }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily int uart\+\_\+printf (\begin{DoxyParamCaption}\item[{const char $\ast$}]{format,  }\item[{}]{... }\end{DoxyParamCaption})}
 
-Prints U\+A\+RT message param\mbox{[}in\mbox{]} format param\mbox{[}out\mbox{]} rc \mbox{\Hypertarget{uc__uart_8c_a7c50e670956187cd7e83aefb288153ef}\label{uc__uart_8c_a7c50e670956187cd7e83aefb288153ef}} 
+Prints U\+A\+RT message param\mbox{[}in\mbox{]} format param\mbox{[}out\mbox{]} rc \mbox{\Hypertarget{uc__uart_8c_ae468e0937557eefb10705cec62e1599b}\label{uc__uart_8c_ae468e0937557eefb10705cec62e1599b}} 
 \index{uc\_uart.c@{uc\_uart.c}!uart\_putc@{uart\_putc}}
 \index{uart\_putc@{uart\_putc}!uc\_uart.c@{uc\_uart.c}}
 \doxysubsubsection{\texorpdfstring{uart\_putc()}{uart\_putc()}}
-{\footnotesize\ttfamily static void uart\+\_\+putc (\begin{DoxyParamCaption}\item[{char}]{ch }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily void uart\+\_\+putc (\begin{DoxyParamCaption}\item[{char}]{ch }\end{DoxyParamCaption})}
 
 Starts U\+A\+RT transmission. 
 \begin{DoxyParams}[1]{Parameters}

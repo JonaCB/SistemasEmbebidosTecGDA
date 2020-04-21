@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Embebidos: C:/Users/afloress/Documents/GitHub/SistemasEmbebidosTecGDA/Abstraction_and_documentation/miniprintf/miniprintf.h Source File</title>
+<title>Embebidos: GitHub/SistemasEmbebidosTecGDA/Abstraction_and_documentation/miniprintf/miniprintf.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -61,7 +61,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_f396504afdc959660871b003fa10164d.html">Documents</a></li><li class="navelem"><a class="el" href="dir_7e17ac9cf8fba2cb04bc248c85b0ceb7.html">GitHub</a></li><li class="navelem"><a class="el" href="dir_f21e892a0f950ea37d7e156019f1bc64.html">SistemasEmbebidosTecGDA</a></li><li class="navelem"><a class="el" href="dir_6f1f061a6038fa51f2248e1e8f5b586e.html">Abstraction_and_documentation</a></li><li class="navelem"><a class="el" href="dir_8dcdc364d75b13671ccb1986c7cd9335.html">miniprintf</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_e5fbe6d2783ccd4c93c7856d92d7be6e.html">GitHub</a></li><li class="navelem"><a class="el" href="dir_d9e3ca53272d91404d201baf84317c61.html">SistemasEmbebidosTecGDA</a></li><li class="navelem"><a class="el" href="dir_c67f57c6978553dd1f29d5c563b05fc1.html">Abstraction_and_documentation</a></li><li class="navelem"><a class="el" href="dir_134cf98fdffb39a6f0a3727e27e64bfc.html">miniprintf</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -154,21 +154,21 @@ $(function() {
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    (1) Declare your own putc <span class="keyword">function</span>,  something like:</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="uc__uart_8c.html#a7c50e670956187cd7e83aefb288153ef">uart_putc</a>(<span class="keywordtype">char</span> ch) {</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="uc__uart_8c.html#ae468e0937557eefb10705cec62e1599b">uart_putc</a>(<span class="keywordtype">char</span> ch) {</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            usart_send_blocking(USART1, ch); <span class="comment">// libopencm3</span></div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        }</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    (2) Declare your own printf <span class="keyword">function</span>:</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <span class="keywordtype">int</span> <a class="code" href="uc__uart_8c.html#a0b205b8518c0e7c405db07a77845bf3f">uart_printf</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *format, ...)</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <span class="keywordtype">int</span> <a class="code" href="uc__uart_8c.html#a953fcdef2bec3905b52c22983a8567eb">uart_printf</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *format, ...)</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            __attribute((format(printf, 1, 2)));</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <span class="keywordtype">int</span> <a class="code" href="uc__uart_8c.html#a0b205b8518c0e7c405db07a77845bf3f">uart_printf</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *format, ...) {</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <span class="keywordtype">int</span> <a class="code" href="uc__uart_8c.html#a953fcdef2bec3905b52c22983a8567eb">uart_printf</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *format, ...) {</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;            va_list args;</div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            <span class="keywordtype">int</span> rc;</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            va_start(args, format);</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;            rc = mini_vprintf_cooked(<a class="code" href="uc__uart_8c.html#a7c50e670956187cd7e83aefb288153ef">uart_putc</a>, format, args);</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;            rc = mini_vprintf_cooked(<a class="code" href="uc__uart_8c.html#ae468e0937557eefb10705cec62e1599b">uart_putc</a>, format, args);</div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;            va_end(args);</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;            <span class="keywordflow">return</span> rc;</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        }</div>
@@ -181,7 +181,7 @@ $(function() {
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160; </div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        <span class="keywordtype">int</span> flea_count = 45;</div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        <a class="code" href="uc__uart_8c.html#a0b205b8518c0e7c405db07a77845bf3f">uart_printf</a>(<span class="stringliteral">&quot;My dog has %d fleas.\n&quot;</span>, flea_count);</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        <a class="code" href="uc__uart_8c.html#a953fcdef2bec3905b52c22983a8567eb">uart_printf</a>(<span class="stringliteral">&quot;My dog has %d fleas.\n&quot;</span>, flea_count);</div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;NOTES:</div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    1.  Stack usage is minimal (perhaps 256 bytes).</div>
@@ -192,8 +192,8 @@ $(function() {
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;#endif  <span class="comment">// ABSTRACTION_AND_DOCUMENTATION_MINIPRINTF_MINIPRINTF_H_</span></div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="comment">/* End miniprintf.h */</span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="auc__uart_8c_html_a7c50e670956187cd7e83aefb288153ef"><div class="ttname"><a href="uc__uart_8c.html#a7c50e670956187cd7e83aefb288153ef">uart_putc</a></div><div class="ttdeci">void uart_putc(char ch)</div><div class="ttdef"><b>Definition:</b> uc_uart.c:14</div></div>
-<div class="ttc" id="auc__uart_8c_html_a0b205b8518c0e7c405db07a77845bf3f"><div class="ttname"><a href="uc__uart_8c.html#a0b205b8518c0e7c405db07a77845bf3f">uart_printf</a></div><div class="ttdeci">int uart_printf(const char *format,...)</div><div class="ttdef"><b>Definition:</b> uc_uart.c:23</div></div>
+<div class="ttc" id="auc__uart_8c_html_ae468e0937557eefb10705cec62e1599b"><div class="ttname"><a href="uc__uart_8c.html#ae468e0937557eefb10705cec62e1599b">uart_putc</a></div><div class="ttdeci">void uart_putc(char ch)</div><div class="ttdef"><b>Definition:</b> uc_uart.c:14</div></div>
+<div class="ttc" id="auc__uart_8c_html_a953fcdef2bec3905b52c22983a8567eb"><div class="ttname"><a href="uc__uart_8c.html#a953fcdef2bec3905b52c22983a8567eb">uart_printf</a></div><div class="ttdeci">int uart_printf(const char *format,...)</div><div class="ttdef"><b>Definition:</b> uc_uart.c:23</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">
