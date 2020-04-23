@@ -16,5 +16,6 @@ void i2c_write_restart(uint8_t byte, uint8_t addr);
 uint8_t i2c_read(bool lastf);
 void i2c_stop(void);
 void i2c_write(uint8_t byte);
+void i2c_write_8bits(uint8_t addr, uint8_t byte);
 
 #endif  // ABSTRACTION_AND_DOCUMENTATION_UC_I2C_UC_I2C_H_
