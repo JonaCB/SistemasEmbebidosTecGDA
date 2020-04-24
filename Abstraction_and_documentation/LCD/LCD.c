@@ -1,4 +1,4 @@
-
+/// @file LCD.c
 #include "LCD.h"
 #include "../uc_i2c/uc_i2c.h"
 #include "../delay/delay.h"
@@ -8,6 +8,10 @@
 
 unsigned char RS, i2c_add, BackLight_State = LCD_BACKLIGHT;
 
+/**
+ * Initializes the LCD and configures it
+ * @param[in] I2C_Add - Address for I2C communication
+ */
 void LCD_Init(unsigned char I2C_Add)
 {
   i2c_add = I2C_Add;
@@ -31,6 +35,9 @@ void LCD_Init(unsigned char I2C_Add)
   delay_ms(1);
 }
 
+/**
+ * Writes 8 bits to the LCD
+ */
 void IO_Expander_Write(unsigned char Data)
 {
   i2c_write_8bits(i2c_add, Data | BackLight_State);

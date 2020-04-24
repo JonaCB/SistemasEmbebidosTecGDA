@@ -1,7 +1,7 @@
+/// @file LCD.h
 // Copyright 2020 Equipo 2
 #ifndef LCD_H_  /* Include guard */  // Cpplint says otherwise
 #define LCD_H_
-
 
 #define LCD_BACKLIGHT         0x08
 #define LCD_NOBACKLIGHT       0x00
