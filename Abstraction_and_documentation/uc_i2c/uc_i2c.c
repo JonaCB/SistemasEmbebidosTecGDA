@@ -122,3 +122,12 @@ void i2c_write(uint8_t byte)  {
     while ( !(I2C_SR1(I2C1) & (I2C_SR1_BTF)) )  {
     }
 }
+
+
+void i2c_write_8bits(uint8_t addr, uint8_t byte){
+
+    i2c_start_addr(addr, Write);
+    i2c_write(byte);
+    i2c_stop();
+}
+

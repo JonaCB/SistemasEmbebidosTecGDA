@@ -5,10 +5,11 @@
 #include "dimmer/dimmer.h"
 #include "uc_timer/uc_timer.h"
 #include "uc_interrupt/uc_interrupt.h"
+#include "delay/delay.h"
 #include "temp_sensor/temp_sensor.h"
 #include "uc_uart/uc_uart.h"
 #include <stdlib.h>
-
+#include "LCD/LCD.h"
 
 #define TIMER_PRESCALER        F_CLK / 1000  // TIM3 frequency =
                                             // 24Mhz/24K = 1khz
@@ -102,16 +103,31 @@ int value_count = 0;
 
 char temp_value[VALUE_STR_LENGTH];
 
+#define SLAVE_ADDRESS_LCD 0x27 //0x24 or 0x27
+
+
+
 int main(void)  {
     system_clock_setup();
     gpio_setup();
+    delay_setup();
     dimmer_setup();
     dimmer_update_percentage(dimPercentage);
     uart_config();
     temp_sensor_setup();
+    LCD_Init(SLAVE_ADDRESS_LCD);
+
+    LCD_Set_Cursor(1, 1);
+    LCD_printf("Initializing");
+    LCD_Set_Cursor(2, 1);
+    LCD_printf("Temp sensor");
+    delay_ms(1000);
+    LCD_CMD(LCD_CLEAR);
+
     timer_config();
 
     for (;;)  {
+
     }
 
     return 0;
@@ -189,6 +205,11 @@ void timer_interrupt(void)  {
                             ,  temp,  MaxTempTh,  MinTempTh,  \
                             led_status[max_led], led_status[min_led],  \
                             dimPercentage);
+                LCD_Set_Cursor(1, 1);
+                LCD_printf("Temp: %d%cC", temp, 223);
+                LCD_Set_Cursor(2, 1);
+                LCD_printf("LED dimm: %d%%", dimPercentage);
+
             }
             break;
         case WAIT_INPUT:
