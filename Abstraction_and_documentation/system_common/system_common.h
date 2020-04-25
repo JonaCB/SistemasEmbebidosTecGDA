@@ -4,7 +4,8 @@
 
 #include <libopencm3/stm32/rcc.h>
 
-#define F_CLK 24000000  ///  <Clock constant define
+//#define F_CLK 24000000  ///  <Clock constant define
+#define F_CLK 72000000  ///  <Clock constant define
 
 void system_clock_setup(void);
 

@@ -8,12 +8,14 @@
 #include "delay/delay.h"
 #include "temp_sensor/temp_sensor.h"
 #include "uc_uart/uc_uart.h"
+#include "uc_usb/uc_usb.h"
 #include <stdlib.h>
 #include "LCD/LCD.h"
 
-#define TIMER_PRESCALER        F_CLK / 1000  // TIM3 frequency =
+#define TIMER_PRESCALER        F_CLK / 10000  //7200 // TIM3 frequency =
                                             // 24Mhz/24K = 1khz
-#define TIMER_PERIOD            100  // 500ms
+                                            //f = 10k
+#define TIMER_PERIOD            1000  // 100ms
 #define TIMER_CLOCK            RCC_TIM3
 #define TIMER                  TIM3
 #define TIMER_INTERRUPT        NVIC_TIM3_IRQ
@@ -115,6 +117,9 @@ int main(void)  {
     dimmer_update_percentage(dimPercentage);
     uart_config();
     temp_sensor_setup();
+
+    //usb_start();
+
     LCD_Init(SLAVE_ADDRESS_LCD);
 
     LCD_Set_Cursor(1, 1);
@@ -127,6 +132,7 @@ int main(void)  {
     timer_config();
 
     for (;;)  {
+
 
     }
 
