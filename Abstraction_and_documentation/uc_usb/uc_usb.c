@@ -11,6 +11,16 @@
 #include <stdbool.h>
 
 #include "uc_usb.h"
+#include "../miniprintf/miniprintf.h"
+
+
+usbd_device *udev = 0;
+
+
+char * txbuf;
+unsigned txlen = 0;
+char char_buff [2] = {0,0};
+
 
 // True when USB configured:
 static volatile bool initialized = false;
@@ -258,11 +268,26 @@ cdcacm_set_config(
 	initialized = true;
 }
 
+
+static void usb_task(void){
+
+        usbd_poll(udev);
+
+        if ( initialized ) {
+			if ( txlen > 0 ) {
+				if ( usbd_ep_write_packet(udev,0x82,txbuf,txlen) != 0 )
+					txlen = 0;	/* Reset if data sent ok */
+			}
+		}
+        
+
+}
+
 /*
  * Start USB driver:
  */
 void usb_start(void) {
-	usbd_device *udev = 0;
+	udev = 0;
 
 	//usb_txq = xQueueCreate(128,sizeof(char));
 	//usb_rxq = xQueueCreate(128,sizeof(char));
@@ -277,6 +302,46 @@ void usb_start(void) {
 
 	usbd_register_set_config_callback(udev,cdcacm_set_config);
 
+    for(;;){
+        usb_task();
+
+    }
+
 	//xTaskCreate(usb_task,"USB",200,udev,configMAX_PRIORITIES-1,NULL);
 }
+void usb_putc(char ch){
+    //while(txlen > 0){}
+    char_buff[0] = ch;
+    txbuf = char_buff;
+    txlen = 1;
+
+    //while(txlen > 0){}
+}
+
+void usb_puts(char* str){
+    txbuf = str;
+    txlen = 0;
+    while(txbuf[txlen] != 0){
+        txlen++;
+    }
+}
+
+/**
+ * Prints UART message
+ * param[in] format
+ * param[out] rc
+ */
+int usb_printf(const char *format, ...)  {
+    va_list args;
+    int rc;
+
+    va_start(args, format);
+    rc = mini_vprintf_cooked(usb_putc, format, args);
+    va_end(args);
+
+    
+    return rc;
+}
+
+
 

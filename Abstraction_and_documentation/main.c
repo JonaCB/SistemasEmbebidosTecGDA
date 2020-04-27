@@ -131,6 +131,8 @@ int main(void)  {
 
     timer_config();
 
+    usb_start();
+
     for (;;)  {
 
 
@@ -187,6 +189,9 @@ static void uart_config(void) {
 void timer_interrupt(void)  {
     int  temp;
     temp = temp_sensor_read();
+
+
+    usb_putc('x');
 
     if (temp > MaxTempTh) {
         gpio_clear(GPIOB, GPIO8);  // on

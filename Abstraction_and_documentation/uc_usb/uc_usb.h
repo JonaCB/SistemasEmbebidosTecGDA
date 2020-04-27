@@ -10,6 +10,8 @@
 #include <stdbool.h>
 
 void usb_start(void);
+void usb_putc(char ch);
+void usb_puts(char* str);
 
 
 #endif /* LIBUSBCDC_H */
