@@ -1,3 +1,4 @@
+/// @file main.c
 //  Copyright 2020 Copyright Equipo 2
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
