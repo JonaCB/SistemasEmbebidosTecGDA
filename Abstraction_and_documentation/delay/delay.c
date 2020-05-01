@@ -9,7 +9,6 @@
  * Sets up the timer used for the delay.
  */
 void delay_setup(void) {
-	timer_reset(TIM4);
 	rcc_periph_clock_enable(RCC_TIM4);
 	timer_set_prescaler(TIM4, F_CLK / 10000);
 }

@@ -26,7 +26,6 @@ void uc_timer_pwm_pin_setup(enum rcc_periph_clken gpio_clk,  \
 void uc_timer_setup(enum rcc_periph_clken timer_clk,  uint32_t timer, \
     uint32_t prescaler)  {
 
-    timer_reset(timer);
     rcc_periph_clock_enable(timer_clk);
     timer_set_prescaler(timer,  prescaler - 1);  // this doesn't work for
     //  frequency > 65Mhz
