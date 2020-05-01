@@ -7,7 +7,7 @@
 #include <libopencm3/usb/usbd.h>
 #include <libopencm3/usb/cdc.h>
 #include <libopencm3/cm3/scb.h>
-
+#include "../delay/delay.h"
 #include <stdbool.h>
 
 #include "uc_usb.h"
@@ -18,8 +18,11 @@ usbd_device *udev = 0;
 
 
 char * txbuf;
-unsigned txlen = 0;
+unsigned int  txlen = 0;
 char char_buff [2] = {0,0};
+
+char msg [300];
+unsigned int msg_index = 0;
 
 
 // True when USB configured:
@@ -314,8 +317,8 @@ void usb_putc(char ch){
     char_buff[0] = ch;
     txbuf = char_buff;
     txlen = 1;
+	delay_ms(1);
 
-    //while(txlen > 0){}
 }
 
 void usb_puts(char* str){
@@ -325,6 +328,10 @@ void usb_puts(char* str){
         txlen++;
     }
 }
+void usb_msg_append(char ch){
+	msg[msg_index++] = ch;
+	txlen++;
+}
 
 /**
  * Prints UART message
@@ -332,13 +339,19 @@ void usb_puts(char* str){
  * param[out] rc
  */
 int usb_printf(const char *format, ...)  {
+
+	msg_index = 0;
+	txlen = 0;
     va_list args;
     int rc;
 
     va_start(args, format);
-    rc = mini_vprintf_cooked(usb_putc, format, args);
+    rc = mini_vprintf_cooked(usb_msg_append, format, args);
     va_end(args);
 
+
+	msg[msg_index] = 0;
+	txbuf = msg;
     
     return rc;
 }

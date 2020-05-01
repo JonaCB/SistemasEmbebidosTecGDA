@@ -190,10 +190,6 @@ static void uart_config(void) {
 void timer_interrupt(void)  {
     int  temp;
     temp = temp_sensor_read();
-
-
-    usb_putc('x');
-
     if (temp > MaxTempTh) {
         gpio_clear(GPIOB, GPIO8);  // on
         max_led = ON;
@@ -217,6 +213,10 @@ void timer_interrupt(void)  {
                             ,  temp,  MaxTempTh,  MinTempTh,  \
                             led_status[max_led], led_status[min_led],  \
                             dimPercentage);
+                            
+                usb_printf("Temp: %dC,  MaxTempTh: %dC,  MinTempTh: %dC\r\n"
+                            ,  temp,  MaxTempTh,  MinTempTh);
+
                 LCD_Set_Cursor(1, 1);
                 LCD_printf("Temp: %d%cC", temp, 223);
                 LCD_Set_Cursor(2, 1);
