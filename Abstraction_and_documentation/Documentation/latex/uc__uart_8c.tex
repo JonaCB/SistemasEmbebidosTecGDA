@@ -1,0 +1,68 @@
+\hypertarget{uc__uart_8c}{}\doxysection{Git\+Hub/\+Sistemas\+Embebidos\+Tec\+G\+D\+A/\+Abstraction\+\_\+and\+\_\+documentation/uc\+\_\+uart/uc\+\_\+uart.c File Reference}
+\label{uc__uart_8c}\index{GitHub/SistemasEmbebidosTecGDA/Abstraction\_and\_documentation/uc\_uart/uc\_uart.c@{GitHub/SistemasEmbebidosTecGDA/Abstraction\_and\_documentation/uc\_uart/uc\_uart.c}}
+{\ttfamily \#include \char`\"{}uc\+\_\+uart.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$libopencm3/stm32/usart.\+h$>$}\newline
+{\ttfamily \#include $<$libopencm3/cm3/nvic.\+h$>$}\newline
+{\ttfamily \#include $<$libopencm3/stm32/rcc.\+h$>$}\newline
+{\ttfamily \#include $<$libopencm3/stm32/gpio.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}../miniprintf/miniprintf.\+h\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{uc__uart_8c_ae468e0937557eefb10705cec62e1599b}{uart\+\_\+putc}} (char ch)
+\item 
+int \mbox{\hyperlink{uc__uart_8c_a953fcdef2bec3905b52c22983a8567eb}{uart\+\_\+printf}} (const char $\ast$format,...)
+\item 
+void \mbox{\hyperlink{uc__uart_8c_a633dd65feec2790697c7d191a2434531}{uart\+\_\+pin\+\_\+setup}} (void)
+\item 
+void \mbox{\hyperlink{uc__uart_8c_a8c40de5eea2a353839e3b2899522d22d}{uart\+\_\+setup}} (void)
+\item 
+void \mbox{\hyperlink{uc__uart_8c_a159a100dbdde22a745524ab3e8aebbec}{uart\+\_\+enable\+\_\+rx\+\_\+interrupt}} (void)
+\item 
+void \mbox{\hyperlink{uc__uart_8c_a57dec283060c68725e979681a6bda710}{uart\+\_\+start}} (void)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{uc__uart_8c_a159a100dbdde22a745524ab3e8aebbec}\label{uc__uart_8c_a159a100dbdde22a745524ab3e8aebbec}} 
+\index{uc\_uart.c@{uc\_uart.c}!uart\_enable\_rx\_interrupt@{uart\_enable\_rx\_interrupt}}
+\index{uart\_enable\_rx\_interrupt@{uart\_enable\_rx\_interrupt}!uc\_uart.c@{uc\_uart.c}}
+\doxysubsubsection{\texorpdfstring{uart\_enable\_rx\_interrupt()}{uart\_enable\_rx\_interrupt()}}
+{\footnotesize\ttfamily void uart\+\_\+enable\+\_\+rx\+\_\+interrupt (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Enables U\+A\+RT receiving interrupt. \mbox{\Hypertarget{uc__uart_8c_a633dd65feec2790697c7d191a2434531}\label{uc__uart_8c_a633dd65feec2790697c7d191a2434531}} 
+\index{uc\_uart.c@{uc\_uart.c}!uart\_pin\_setup@{uart\_pin\_setup}}
+\index{uart\_pin\_setup@{uart\_pin\_setup}!uc\_uart.c@{uc\_uart.c}}
+\doxysubsubsection{\texorpdfstring{uart\_pin\_setup()}{uart\_pin\_setup()}}
+{\footnotesize\ttfamily void uart\+\_\+pin\+\_\+setup (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Sets up the U\+A\+RT peripheral pin ports needed. \mbox{\Hypertarget{uc__uart_8c_a953fcdef2bec3905b52c22983a8567eb}\label{uc__uart_8c_a953fcdef2bec3905b52c22983a8567eb}} 
+\index{uc\_uart.c@{uc\_uart.c}!uart\_printf@{uart\_printf}}
+\index{uart\_printf@{uart\_printf}!uc\_uart.c@{uc\_uart.c}}
+\doxysubsubsection{\texorpdfstring{uart\_printf()}{uart\_printf()}}
+{\footnotesize\ttfamily int uart\+\_\+printf (\begin{DoxyParamCaption}\item[{const char $\ast$}]{format,  }\item[{}]{... }\end{DoxyParamCaption})}
+
+Prints U\+A\+RT message param\mbox{[}in\mbox{]} format param\mbox{[}out\mbox{]} rc \mbox{\Hypertarget{uc__uart_8c_ae468e0937557eefb10705cec62e1599b}\label{uc__uart_8c_ae468e0937557eefb10705cec62e1599b}} 
+\index{uc\_uart.c@{uc\_uart.c}!uart\_putc@{uart\_putc}}
+\index{uart\_putc@{uart\_putc}!uc\_uart.c@{uc\_uart.c}}
+\doxysubsubsection{\texorpdfstring{uart\_putc()}{uart\_putc()}}
+{\footnotesize\ttfamily void uart\+\_\+putc (\begin{DoxyParamCaption}\item[{char}]{ch }\end{DoxyParamCaption})}
+
+Starts U\+A\+RT transmission. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em character} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{uc__uart_8c_a8c40de5eea2a353839e3b2899522d22d}\label{uc__uart_8c_a8c40de5eea2a353839e3b2899522d22d}} 
+\index{uc\_uart.c@{uc\_uart.c}!uart\_setup@{uart\_setup}}
+\index{uart\_setup@{uart\_setup}!uc\_uart.c@{uc\_uart.c}}
+\doxysubsubsection{\texorpdfstring{uart\_setup()}{uart\_setup()}}
+{\footnotesize\ttfamily void uart\+\_\+setup (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Sets up the U\+A\+RT configuration. \mbox{\Hypertarget{uc__uart_8c_a57dec283060c68725e979681a6bda710}\label{uc__uart_8c_a57dec283060c68725e979681a6bda710}} 
+\index{uc\_uart.c@{uc\_uart.c}!uart\_start@{uart\_start}}
+\index{uart\_start@{uart\_start}!uc\_uart.c@{uc\_uart.c}}
+\doxysubsubsection{\texorpdfstring{uart\_start()}{uart\_start()}}
+{\footnotesize\ttfamily void uart\+\_\+start (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Starts U\+A\+RT. 

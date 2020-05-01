@@ -1,4 +1,4 @@
-
+/// @file LCD.c
 #include "LCD.h"
 #include "../uc_i2c/uc_i2c.h"
 #include "../delay/delay.h"
@@ -8,6 +8,10 @@
 
 unsigned char RS, i2c_add, BackLight_State = LCD_BACKLIGHT;
 
+/**
+ * Initializes the LCD and configures it
+ * @param[in] I2C_Add - Address for I2C communication
+ */
 void LCD_Init(unsigned char I2C_Add)
 {
   i2c_add = I2C_Add;
@@ -31,11 +35,19 @@ void LCD_Init(unsigned char I2C_Add)
   delay_ms(1);
 }
 
+/**
+ * Writes 8 bits to the LCD                
+ * @param[in] Data - 8 bits Data to be written to the LCD
+ */
 void IO_Expander_Write(unsigned char Data)
 {
   i2c_write_8bits(i2c_add, Data | BackLight_State);
 }
 
+/**
+ * Writes 8 bits to the LCD in 2 four-bit transactions                                                                                   
+ * @param[in] Nibble - 4 bits Data to be written to the LCD
+ */
 void LCD_Write_4Bit(unsigned char Nibble)
 {
   // Get The RS Value To LSB OF Data
@@ -45,6 +57,10 @@ void LCD_Write_4Bit(unsigned char Nibble)
   delay_ms(1);
 }
 
+/**
+ * Sends a command to the LCD.
+ * @param[in] CMD
+ */
 void LCD_CMD(unsigned char CMD)
 {
   RS = 0; // Command Register Select
@@ -52,6 +68,10 @@ void LCD_CMD(unsigned char CMD)
   LCD_Write_4Bit((CMD << 4) & 0xF0);
 }
 
+/**
+ * Sends a char to the LCD
+ * @param[in] Data
+ */
 void LCD_Write_Char(char Data)
 {
   RS = 1; // Data Register Select
@@ -59,12 +79,21 @@ void LCD_Write_Char(char Data)
   LCD_Write_4Bit((Data << 4) & 0xF0);
 }
 
+/**
+ * Sends a string to the LCD.
+ * @param[in] Str
+ */
 void LCD_Write_String(char* Str)
 {
   for(int i=0; Str[i]!='\0'; i++)
     LCD_Write_Char(Str[i]);
 }
 
+/**
+ * Sets the cursor in a given position.
+ * @param[in] ROW
+ * @param[in] COL
+ */
 void LCD_Set_Cursor(unsigned char ROW, unsigned char COL)
 {
   switch(ROW) 
@@ -84,7 +113,10 @@ void LCD_Set_Cursor(unsigned char ROW, unsigned char COL)
   }
 }
 
-
+/**
+ * Sends a char to the LCD.
+ * @param[in] Str
+ */
 void LCD_putc(char ch)  {
     LCD_Write_Char(ch);
 }

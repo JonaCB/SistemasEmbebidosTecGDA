@@ -1,3 +1,4 @@
+/// @file main.c
 //  Copyright 2020 Copyright Equipo 2
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
@@ -189,11 +190,6 @@ static void uart_config(void) {
 void timer_interrupt(void)  {
     int  temp;
     temp = temp_sensor_read();
-
-
-    
-    //usb_putc('x');
-
     if (temp > MaxTempTh) {
         gpio_clear(GPIOB, GPIO8);  // on
         max_led = ON;

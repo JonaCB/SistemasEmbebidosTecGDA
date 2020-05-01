@@ -16,6 +16,7 @@ int usb_printf(const char *format, ...);
 void usb_msg_append(char ch);
 
 
+
 #endif /* LIBUSBCDC_H */
 
 /* End libusbcdc.h */
